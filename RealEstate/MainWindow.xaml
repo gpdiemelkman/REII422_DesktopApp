@@ -40,11 +40,11 @@
 
 
 
-            <TextBlock Text="Username : " Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="18" />
-            <TextBox x:Name="TB_Username" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" />
+            <TextBlock Text="Username : " Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="18"/>
+            <TextBox x:Name="TB_Username" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" Text="gpdiemelkman@gmail.com"/>
 
             <TextBlock Text="Password : " Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="18" />
-            <PasswordBox x:Name="PB_Password" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" />
+            <PasswordBox x:Name="PB_Password" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" Password="qwerty"/>
 
             <Button x:Name="BT_SignIn" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Content="Sign In" FontSize="24" Click="BT_SignIn_Click" IsDefault="True"/>
 

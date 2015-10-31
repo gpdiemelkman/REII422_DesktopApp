@@ -21,6 +21,7 @@ namespace RealEstate.Overlays.Listings
     {
         public event EventHandler OnExit;
 
+        #region Input Response
         public AddListingOverlay(string currentAgent)
         {
             InitializeComponent();
@@ -62,5 +63,16 @@ namespace RealEstate.Overlays.Listings
             TBL_ComplexNo.Visibility = System.Windows.Visibility.Hidden;
             TB_ComplexNo.Visibility = System.Windows.Visibility.Hidden;
         }
+
+        private void BT_CreateNew_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BT_Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
     }
 }

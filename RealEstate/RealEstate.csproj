@@ -130,6 +130,7 @@
     <Compile Include="GridViewSources\City.cs" />
     <Compile Include="GridViewSources\Client.cs" />
     <Compile Include="GridViewSources\Listings.cs" />
+    <Compile Include="GridViewSources\Property.cs" />
     <Compile Include="GridViewSources\Province.cs" />
     <Compile Include="Overlays\Admin\AddAdminOverlay.xaml.cs" />
     <Compile Include="Overlays\Admin\EditAdminOverlay.xaml.cs" />
@@ -164,14 +165,14 @@
     <Compile Include="Views\AdminViews\AreaView.xaml.cs" />
     <Compile Include="Views\AdminViews\CitiesView.xaml.cs" />
     <Compile Include="Views\AdminViews\ProvincesView.xaml.cs" />
-    <Compile Include="Views\AgentViews\AddPropertyView.xaml.cs">
-      <DependentUpon>AddPropertyView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\AgentViews\ListingsView.xaml.cs">
       <DependentUpon>ListingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AgentViews\ManageClientsView.xaml.cs">
       <DependentUpon>ManageClientsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AgentViews\PropertiesView.xaml.cs">
+      <DependentUpon>PropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\AdminWindow.xaml.cs" />
     <Compile Include="Windows\AgentWindow.xaml.cs">
@@ -269,15 +270,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\AgentViews\AddPropertyView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\AgentViews\ListingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AgentViews\ManageClientsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AgentViews\PropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
