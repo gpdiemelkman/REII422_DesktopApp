@@ -75,5 +75,22 @@ namespace RealEstate.Classes
 
             return canAdd;
         }
+
+        public int GetAgentID(string email)
+        {
+            DatabaseManager dbManager = new DatabaseManager();
+
+            int agentID = -1;
+
+
+            var agentIDs = dbManager.ReturnQuery("SELECT Agent_ID FROM Agent WHERE Agent_Email = '" + email + "';");
+
+            foreach (var id in agentIDs)
+            {
+                agentID = Convert.ToInt32(id[0]);
+            }
+
+            return agentID;
+        }
     }
 }

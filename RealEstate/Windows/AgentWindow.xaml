@@ -22,10 +22,17 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <AgentViews:ListingsView Visibility="Hidden" x:Name="AV_ManageListings" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+        <AgentViews:AddListingView Visibility="Hidden" x:Name="AV_AddListing" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+
+
+        <AgentViews:ListingsView Visibility="Hidden" x:Name="AV_Listings" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+        
         <AgentViews:PropertiesView Visibility="Hidden" x:Name="AV_ViewProperties" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+
         <AgentViews:ManageClientsView Visibility="Hidden" x:Name="AV_MangeClients" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" />
         
+        <AgentViews:EditListingView Visibility="Hidden" x:Name="AV_EditListing" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+
         <Button x:Name="BT_Listings" Grid.Column="0" Grid.Row="0" Margin="5,5,5,5" Click="BT_Listings_Click">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <extra:Icon Style="{StaticResource CabinetFilesVariantIconStyle}" Size="VeryLarge" />
@@ -39,7 +46,7 @@
                 <TextBlock Text="Manage Customers" FontSize="30" />
              </StackPanel>
         </Button>
-        
+
         <Button x:Name="BT_Properties" Grid.Column="0" Grid.Row="1" Margin="5,0,5,10" Click="BT_Properties_Click">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <extra:Icon Style="{StaticResource HousesIconStyle}" Size="VeryLarge" />

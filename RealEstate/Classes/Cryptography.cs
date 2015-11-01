@@ -78,7 +78,7 @@ namespace RealEstate.Classes
             }
             catch (Exception e)
             {
-                Console.WriteLine("DecryptString exception : " + e.ToString());
+                //Console.WriteLine("DecryptString exception : " + e.ToString());
                 return null;
             }
         }

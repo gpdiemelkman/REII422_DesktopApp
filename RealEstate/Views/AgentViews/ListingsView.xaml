@@ -6,7 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"              
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:params="http://schemas.codeplex.com/elysium/params"             
+        xmlns:params="http://schemas.codeplex.com/elysium/params"     
+        xmlns:AgentViews="clr-namespace:RealEstate.Views.AgentViews"
         mc:Ignorable="d"
         d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
@@ -18,15 +19,18 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="80" />
         </Grid.RowDefinitions>
-
+        
+        
+       
         <DataGrid x:Name="DG_Listings" extra:UIElementAttached.IsBubblingMouseWheelEvents="True" IsReadOnly="True" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" SelectionChanged="DG_Listings_SelectionChanged">
             <DataGrid.Columns>
+                <extra:DataGridTextColumn Header="Client" Binding="{Binding Client}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Address" Binding="{Binding Address}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Complex" Binding="{Binding Complex}" AutomationProperties.Name="Text" />
-                <extra:DataGridTextColumn Header="Unit No." Binding="{Binding UnitNo}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Price" Binding="{Binding Price}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Sold" Binding="{Binding Sold}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Negotiable" Binding="{Binding Negotiable}" AutomationProperties.Name="Text" />
+                <extra:DataGridTextColumn Header="Description" Binding="{Binding Description}" AutomationProperties.Name="Text" />
             </DataGrid.Columns>
         </DataGrid>
 
@@ -37,8 +41,8 @@
             <metro:CommandButton x:Name="BT_Refresh" Margin="{Binding RelativeSource={RelativeSource Self}, Path=(params:General.BoldPadding), Mode=OneWay}" Style="{StaticResource RefreshCommandButtonStyle}" ToolTip="Refresh Listings" VerticalAlignment="Center" Click="BT_Refresh_Click"/>
         </extra:AnimatedWrapPanel>
 
-        <GroupBox Header="Selected Agent" Grid.Column="1" Grid.Row="1">
-            <TextBlock x:Name="TB_SelectedAgent" Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" />
+        <GroupBox Header="Selected Listing" Grid.Column="1" Grid.Row="1">
+            <TextBlock x:Name="TB_SelectedListing" Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" />
         </GroupBox>
         
         <metro:CommandButton x:Name="BT_Back" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Margin="{Binding RelativeSource={RelativeSource Self}, Path=(params:General.BoldPadding), Mode=OneWay}" Style="{StaticResource BackCommandButtonStyle}" Click="BT_Back_Click" ToolTip="Back to Menu"/>

@@ -42,6 +42,7 @@ namespace RealEstate.Views.AgentViews
             ShowAgentWindow();
         }
 
+
         private void BT_Refresh_Click(object sender, RoutedEventArgs e)
         {
             RefreshClients();
@@ -200,7 +201,6 @@ namespace RealEstate.Views.AgentViews
         #endregion
 
         #region Open Overlays
-
         private void OpenAddClientOverlay()
         {
             AddClientOverlay clientOverlay = new AddClientOverlay();
@@ -216,7 +216,6 @@ namespace RealEstate.Views.AgentViews
             clientOverlay.Owner = Framework.UI.Controls.Window.GetWindow(this);
             clientOverlay.Show();
         }
-
         private void OpenEditPreferenceOverlay()
         {
             Overlays.Client.EditPreferenceOverlay preferenceOverlay = new Overlays.Client.EditPreferenceOverlay(GetSelectedEmail());

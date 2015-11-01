@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -114,6 +115,7 @@
     <Compile Include="Classes\DatabaseManager.cs" />
     <Compile Include="Classes\FtpManager.cs" />
     <Compile Include="Classes\FtpState.cs" />
+    <Compile Include="Classes\Hashing.cs" />
     <Compile Include="Classes\ListingManager.cs" />
     <Compile Include="Classes\LocationManager.cs" />
     <Compile Include="Classes\PreferenceManager.cs" />
@@ -145,8 +147,8 @@
     <Compile Include="Overlays\Client\EditPreferenceOverlay.xaml.cs">
       <DependentUpon>EditPreferenceOverlay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Overlays\Listings\AddListingOverlay.xaml.cs">
-      <DependentUpon>AddListingOverlay.xaml</DependentUpon>
+    <Compile Include="Overlays\Listings\LoadingOverlay.xaml.cs">
+      <DependentUpon>LoadingOverlay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Overlays\Location\AddAreaOverlay.xaml.cs" />
     <Compile Include="Overlays\Location\AddCityOverlay.xaml.cs" />
@@ -165,14 +167,20 @@
     <Compile Include="Views\AdminViews\AreaView.xaml.cs" />
     <Compile Include="Views\AdminViews\CitiesView.xaml.cs" />
     <Compile Include="Views\AdminViews\ProvincesView.xaml.cs" />
+    <Compile Include="Views\AgentViews\AddListingView.xaml.cs">
+      <DependentUpon>AddListingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AgentViews\EditListingView.xaml.cs">
+      <DependentUpon>EditListingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AgentViews\ListingsView.xaml.cs">
       <DependentUpon>ListingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AgentViews\ManageClientsView.xaml.cs">
       <DependentUpon>ManageClientsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AgentViews\PropertiesView.xaml.cs">
-      <DependentUpon>PropertiesView.xaml</DependentUpon>
+    <Compile Include="Views\AgentViews\PropertiesViewxaml.xaml.cs">
+      <DependentUpon>PropertiesViewxaml.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\AdminWindow.xaml.cs" />
     <Compile Include="Windows\AgentWindow.xaml.cs">
@@ -218,7 +226,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Overlays\Listings\AddListingOverlay.xaml">
+    <Page Include="Overlays\Listings\LoadingOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -270,6 +278,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\AgentViews\AddListingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AgentViews\EditListingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AgentViews\ListingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -278,7 +294,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AgentViews\PropertiesView.xaml">
+    <Page Include="Views\AgentViews\PropertiesViewxaml.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

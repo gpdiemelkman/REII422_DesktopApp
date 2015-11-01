@@ -26,8 +26,10 @@ namespace RealEstate.Windows
             InitializeComponent();
             currentAgentName = agent;
             this.Title = this.Title + agent;
-            AV_ManageListings.Tag = this;
+            AV_Listings.Tag = this;
             AV_MangeClients.Tag = this;
+            AV_AddListing.Tag = this;
+            AV_EditListing.Tag = this;
             AV_ViewProperties.Tag = this;
         }
 
@@ -46,10 +48,34 @@ namespace RealEstate.Windows
         {
             ShowManageClientsView();
         }
-        private void ShowManageListingsView()
+        public void ShowListingsView()
         {
             HideButtons();
-            AV_ManageListings.Visibility = System.Windows.Visibility.Visible;
+            AV_Listings.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public void HideListingsView()
+        {
+            AV_Listings.Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        public void ShowAddListingView()
+        {
+            AV_AddListing.Visibility = System.Windows.Visibility.Visible;
+        }
+        public void HideAddListingView()
+        {
+            AV_AddListing.Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        public void ShowEditListingView()
+        {
+            AV_EditListing.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public void HideEditListingView()
+        {
+            AV_EditListing.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void ShowManageClientsView()
@@ -58,11 +84,6 @@ namespace RealEstate.Windows
             AV_MangeClients.Visibility = System.Windows.Visibility.Visible;
         }
 
-        private void ShowViewPropertiesView()
-        {
-            HideButtons();
-            AV_ViewProperties.Visibility = System.Windows.Visibility.Visible;
-        }
         private void HideButtons()
         {
             BT_Listings.Visibility = System.Windows.Visibility.Hidden;
@@ -81,14 +102,22 @@ namespace RealEstate.Windows
 
         private void BT_Listings_Click(object sender, RoutedEventArgs e)
         {
-            ShowManageListingsView();
+            ShowListingsView();
         }
 
         private void BT_Properties_Click(object sender, RoutedEventArgs e)
         {
             ShowViewPropertiesView();
         }
+        private void ShowViewPropertiesView()
+        {
+            HideButtons();
+            AV_ViewProperties.Visibility = System.Windows.Visibility.Visible;
+        }
 
-        
+        public void LoadEditListingInfo(int listID)
+        {
+            AV_EditListing.LoadListingInfo(listID);
+        }
     }
 }

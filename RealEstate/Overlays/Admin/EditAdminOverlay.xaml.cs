@@ -155,7 +155,6 @@ namespace RealEstate.Overlays.Admin
         {
             new System.Threading.Thread(() =>
                 {
-                    Classes.Cryptography crypt = new Classes.Cryptography();
                     if( adminToEdit != "")
                     {
                         Classes.AdminManager adminManager = new Classes.AdminManager();
@@ -221,7 +220,7 @@ namespace RealEstate.Overlays.Admin
             }
             else if((bool)CB_ChangePassword.IsChecked )
             {
-                if( CanEditPassword() )
+                if( CanEditUsername() )
                 {
                     canEdit = true;
                 }
