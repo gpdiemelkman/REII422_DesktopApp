@@ -255,8 +255,7 @@ namespace RealEstate
                 SetLoadingStatus(true);
                 DisplayNotifyBox("Attempting to Sign In", "Please wait while we sign you in");
 
-                string passsword = crypto.EncryptString(GetPassword());
-
+                string passsword = PB_Password.Password.ToString();
                 Classes.Session session = new Classes.Session(GetUsername(), passsword);
 
                 if (session.LoginSuccessfull)

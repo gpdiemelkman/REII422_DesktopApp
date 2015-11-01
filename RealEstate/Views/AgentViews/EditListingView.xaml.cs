@@ -436,7 +436,6 @@ namespace RealEstate.Views.AgentViews
             var bitmapimage = GetBitmapImage(allbytes);
 
             return bitmapimage;
-
         }
 
         private void BT_Delete_Click(object sender, RoutedEventArgs e)
