@@ -66,6 +66,10 @@ namespace RealEstate.Overlays.Admin
 
                 this.Close();
             }
+            else
+            {
+                DisplayNotifybox("Error", "Cannot edit admin");
+            }
         }
 
         #region Set Form Features
@@ -220,7 +224,7 @@ namespace RealEstate.Overlays.Admin
             }
             else if((bool)CB_ChangePassword.IsChecked )
             {
-                if( CanEditUsername() )
+                if( CanEditPassword() )
                 {
                     canEdit = true;
                 }

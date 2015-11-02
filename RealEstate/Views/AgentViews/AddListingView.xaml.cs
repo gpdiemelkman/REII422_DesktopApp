@@ -26,6 +26,7 @@ namespace RealEstate.Views.AgentViews
         public List<int> provinceID;
         public List<int> cityID;
         public List<int> areaID;
+        public List<int> imageID;
         public int currentProvinceID;
         public int currentCityID;
         public int currentAreaID;
@@ -51,6 +52,7 @@ namespace RealEstate.Views.AgentViews
         public int isSold;
         public int isNegotiable;
         public int hasPool;
+        public string description;
 
         BitmapImage previewImage;
 
@@ -61,8 +63,9 @@ namespace RealEstate.Views.AgentViews
         {
             InitializeComponent();
             LoadComboBoxes();
+            TB_ImageCaption.IsEnabled = false;
         }
-
+        #region Input response
         private void CB_Complex_Click(object sender, RoutedEventArgs e)
         {
             if( (bool)CB_Complex.IsChecked )
@@ -74,13 +77,11 @@ namespace RealEstate.Views.AgentViews
                 SP_ComplexDetails.Visibility = System.Windows.Visibility.Hidden;
             }
         }
-
         private void BT_Cancel_Click(object sender, RoutedEventArgs e)
         {
             (this.Tag as AgentWindow).HideAddListingView();
             (this.Tag as AgentWindow).ShowListingsView();
         }
-
         private void BT_AddImage_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
@@ -97,6 +98,7 @@ namespace RealEstate.Views.AgentViews
                 IMG_SelectedImage.Source = CloneImage(dialog.FileName.ToString());
                 imageSource.Add(dialog.FileName.ToString());
                 imageCaptions.Add("");
+                TB_ImageCaption.IsEnabled = true;
                 
                 if( (CB_Images.Items.Count-1)  == 0 )
                 {
@@ -108,7 +110,6 @@ namespace RealEstate.Views.AgentViews
                 }
             }
         }
-
         private void CB_Images_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if( CB_Images.SelectedIndex != -1)
@@ -117,14 +118,131 @@ namespace RealEstate.Views.AgentViews
                 TB_ImageCaption.Text = imageCaptions[CB_Images.SelectedIndex].ToString();
             }
         }
+        private void CB_Client_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            currentClientID = clientsID[CB_Client.SelectedIndex];
+        }
+        private void CB_Province_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            new System.Threading.Thread(() =>
+            {
+                SetLoadingState(true);
+                ClearCities();
+                ChangeProvinceID();
+                LoadCities();
+                SetLoadingState(false);
+            }).Start();
+        }
+        private void CB_City_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            new System.Threading.Thread(() =>
+            {
+                ClearAreas();
+                ChangeCityID();
+                LoadArea();
+            }).Start();
+        }
+        private void CB_Area_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CB_Area.SelectedIndex != -1)
+                currentAreaID = areaID[CB_Area.SelectedIndex];
+        }
+        private void BT_CreateListing_Click(object sender, RoutedEventArgs e)
+        {
+            LoadVariablesTB();
+            CreateListings();
+            UploadImages();
+        }
+        private void TB_ImageCaption_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if(CB_Images.SelectedIndex != -1)
+                imageCaptions[CB_Images.SelectedIndex] = TB_ImageCaption.Text.ToString() + e.Text.ToString();
+        }
+        private void BT_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            imageSource.Remove(CB_Images.SelectedItem.ToString());
+            CB_Images.Items.RemoveAt(CB_Images.SelectedIndex);
+            IMG_SelectedImage.Source = null;
+            TB_ImageCaption.Text = "";
+            if (CB_Images.Items.Count != 0)
+                CB_Images.SelectedIndex = 0;
+            else
+                CB_Images.SelectedIndex = -1;
+        }
+        #endregion
 
-
+        #region Form Control
+        private void SetLoadingState(bool loading)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                if (loading)
+                {
+                    BT_AddImage.IsEnabled = false;
+                    BT_Cancel.IsEnabled = false;
+                    BT_Delete.IsEnabled = false;
+                    BT_CreateListing.IsEnabled = false;
+                    BT_Estimate.IsEnabled = false;
+                    TB_Bathrooms.IsEnabled = false;
+                    TB_Bedrooms.IsEnabled = false;
+                    TB_ComplexName.IsEnabled = false;
+                    TB_ComplexNo.IsEnabled = false;
+                    TB_Description.IsEnabled = false;
+                    TB_Garages.IsEnabled = false;
+                    TB_HouseSize.IsEnabled = false;
+                    TB_ImageCaption.IsEnabled = false;
+                    TB_ListPrice.IsEnabled = false;
+                    TB_PlotSize.IsEnabled = false;
+                    TB_Price.IsEnabled = false;
+                    TB_Streetname.IsEnabled = false;
+                    TB_Streetno.IsEnabled = false;
+                    CB_Area.IsEditable = false;
+                    CB_City.IsEnabled = false;
+                    CB_Client.IsEnabled = false;
+                    CB_Complex.IsEnabled = false;
+                    CB_hasPool.IsEnabled = false;
+                    CB_Images.IsEnabled = false;
+                    CB_isNegotiable.IsEnabled = false;
+                    CB_isSold.IsEnabled = false;
+                    CB_Province.IsEnabled = false;
+                }
+                else
+                {
+                    BT_AddImage.IsEnabled = true;
+                    BT_Cancel.IsEnabled = true;
+                    BT_Delete.IsEnabled = true;
+                    BT_CreateListing.IsEnabled = true;
+                    BT_Estimate.IsEnabled = true;
+                    TB_Bathrooms.IsEnabled = true;
+                    TB_Bedrooms.IsEnabled = true;
+                    TB_ComplexName.IsEnabled = true;
+                    TB_ComplexNo.IsEnabled = true;
+                    TB_Description.IsEnabled = true;
+                    TB_Garages.IsEnabled = true;
+                    TB_HouseSize.IsEnabled = true;
+                    TB_ImageCaption.IsEnabled = true;
+                    TB_ListPrice.IsEnabled = true;
+                    TB_PlotSize.IsEnabled = true;
+                    TB_Price.IsEnabled = true;
+                    TB_Streetname.IsEnabled = true;
+                    TB_Streetno.IsEnabled = true;
+                    CB_Area.IsEditable = true;
+                    CB_City.IsEnabled = true;
+                    CB_Client.IsEnabled = true;
+                    CB_Complex.IsEnabled = true;
+                    CB_hasPool.IsEnabled = true;
+                    CB_Images.IsEnabled = true;
+                    CB_isNegotiable.IsEnabled = true;
+                    CB_isSold.IsEnabled = true;
+                    CB_Province.IsEnabled = true;
+                }
+            });
+        }
         private void LoadComboBoxes()
         {
             LoadClients();
             LoadProvinces();
         }
-
         private void LoadClients()
         {
             Classes.ListingManager listManager = new Classes.ListingManager();
@@ -134,7 +252,6 @@ namespace RealEstate.Views.AgentViews
             }
             clientsID = listManager.GetClientsID();
         }
-
         private void LoadProvinces()
         {
             Classes.ListingManager listManager = new Classes.ListingManager();
@@ -144,7 +261,6 @@ namespace RealEstate.Views.AgentViews
             }
             provinceID = listManager.GetProvincesID();
         }
-
         private void LoadCities()
         {
             this.Dispatcher.Invoke(() =>
@@ -157,7 +273,6 @@ namespace RealEstate.Views.AgentViews
                 cityID = listManager.GetCitiesID(currentProvinceID);
             });
         }
-
         private void ClearCities()
         {
             this.Dispatcher.Invoke(()=>
@@ -165,7 +280,6 @@ namespace RealEstate.Views.AgentViews
                 CB_City.Items.Clear();
             });
         }
-
         private void ClearAreas()
         {
             this.Dispatcher.Invoke(() =>
@@ -173,7 +287,6 @@ namespace RealEstate.Views.AgentViews
                     CB_Area.Items.Clear();
                 });
         }
-
         private void ChangeProvinceID()
         {
             this.Dispatcher.Invoke(() =>
@@ -188,28 +301,7 @@ namespace RealEstate.Views.AgentViews
                 if (CB_City.SelectedIndex != -1)
                     currentCityID = cityID[CB_City.SelectedIndex];
             });
-        }
-
-        private void CreateListings()
-        {
-            agentEmail = (this.Tag as AgentWindow).currentAgentName;
-            Classes.ListingManager listManager = new Classes.ListingManager();
-            listManager.AddListingAddress(currentAreaID, streetName, streetNo);
-            addressID = listManager.GetAddressID(currentAreaID, streetName, streetNo);
-            if (CB_Complex.IsChecked == true)
-            {
-                listManager.AddListingComplex(complexName, addressID);
-                complexID = listManager.GetComplexID(complexName, addressID);
-            }
-            else
-                complexID = -1;
-
-            listManager.AddListingProperty(currentClientID, addressID, complexID, complexNo, bedrooms, bathrooms, garages, hasPool, plotSize, houseSize, propertyValue);
-            propertyID = listManager.GetPropertyID(currentClientID);
-            agentID = listManager.GetAgentID(agentEmail);
-            listManager.AddListing(propertyID, agentID, propertyPrice, isNegotiable, isSold);
-
-        }
+        }      
         private void LoadVariablesTB()
         {
             streetName = TB_Streetname.Text;
@@ -224,6 +316,7 @@ namespace RealEstate.Views.AgentViews
             isSold = Convert.ToInt32(CB_isSold.IsChecked);
             isNegotiable = Convert.ToInt32(CB_isNegotiable.IsChecked);
             hasPool = Convert.ToInt32(CB_hasPool.IsChecked);
+            description = TB_Description.Text;
 
             complexName = "Null";
             complexNo = 0;
@@ -235,7 +328,6 @@ namespace RealEstate.Views.AgentViews
             }
 
         }
-
         private void LoadArea()
         {
             this.Dispatcher.Invoke(() =>
@@ -247,58 +339,7 @@ namespace RealEstate.Views.AgentViews
                 }
                 areaID = listManager.GetAreasID(currentCityID);
             });
-        }
-
-        private void CB_Client_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            currentClientID = clientsID[CB_Client.SelectedIndex];
-        }
-
-        private void CB_Province_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            new System.Threading.Thread(() =>
-            {
-                ClearCities();
-                ChangeProvinceID();
-                LoadCities();
-            }).Start();
-        }
-
-        private void CB_City_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            new System.Threading.Thread(() =>
-            {
-                ClearAreas();
-                ChangeCityID();
-                LoadArea();
-            }).Start();
-        }
-
-        private void CB_Area_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (CB_Area.SelectedIndex != -1)
-                currentAreaID = areaID[CB_Area.SelectedIndex];
-        }
-
-        private void BT_CreateListing_Click(object sender, RoutedEventArgs e)
-        {
-            LoadVariablesTB();
-            CreateListings();
-            UploadImages();
-        }
-
-        private void TB_ImageCaption_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            imageCaptions[CB_Images.SelectedIndex] = TB_ImageCaption.Text.ToString() + e.Text.ToString();
-        }
-
-        private void UploadImages()
-        {
-            Overlays.Listings.LoadingOverlay uploadImages = new Overlays.Listings.LoadingOverlay(propertyID,imageSource,imageCaptions);
-            uploadImages.Owner = Framework.UI.Controls.Window.GetWindow(this);
-            uploadImages.Show();
-        }
-
+        }        
         BitmapImage GetBitmapImage(byte[] imageBytes)
         {
             var bitmapImage = new BitmapImage();
@@ -307,8 +348,6 @@ namespace RealEstate.Views.AgentViews
             bitmapImage.EndInit();
             return bitmapImage;
         }
-
-
         BitmapImage CloneImage(string filePath)
         {
             List<byte> bytes = new List<byte>();
@@ -333,13 +372,36 @@ namespace RealEstate.Views.AgentViews
             return bitmapimage;
 
         }
+        #endregion
 
-        private void BT_Delete_Click(object sender, RoutedEventArgs e)
+        private void CreateListings()
         {
+            agentEmail = (this.Tag as AgentWindow).currentAgentName;
+            Classes.ListingManager listManager = new Classes.ListingManager();
+            if (listManager.GetAddressID(currentAreaID, streetName, streetNo) == -1)
+                listManager.AddListingAddress(currentAreaID, streetName, streetNo);
+            addressID = listManager.GetAddressID(currentAreaID, streetName, streetNo);
+            if (CB_Complex.IsChecked == true)
+            {
+                if (listManager.GetComplexID(complexName, addressID) == -1)
+                    listManager.AddListingComplex(complexName, addressID);
+                complexID = listManager.GetComplexID(complexName, addressID);
+            }
+            else
+                complexID = -1;
 
+            listManager.AddListingProperty(currentClientID, addressID, complexID, complexNo, bedrooms, bathrooms, garages, hasPool, plotSize, houseSize, propertyValue, description);
+            propertyID = listManager.GetPropertyID(currentClientID);
+            agentID = listManager.GetAgentID(agentEmail);
+            listManager.AddListing(propertyID, agentID, propertyPrice, isNegotiable, isSold, description);
         }
-
-       
-
+        private void UploadImages()
+        {
+            Overlays.Listings.LoadingOverlay uploadImages = new Overlays.Listings.LoadingOverlay(propertyID, imageSource, imageCaptions, imageID);
+            uploadImages.Owner = Framework.UI.Controls.Window.GetWindow(this);
+            uploadImages.Show();
+            (this.Tag as AgentWindow).HideAddListingView();
+            (this.Tag as AgentWindow).ShowListingsView();
+        }
     }
 }

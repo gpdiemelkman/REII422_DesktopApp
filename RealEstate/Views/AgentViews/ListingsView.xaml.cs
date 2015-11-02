@@ -97,7 +97,8 @@ namespace RealEstate.Views.AgentViews
 
         private void BT_DeleteListing_Click(object sender, RoutedEventArgs e)
         {
-
+            ListingManager listMan = new ListingManager();
+            listMan.DeleteListing(selectedListingID);
         }
 
         private void BT_Refresh_Click(object sender, RoutedEventArgs e)
@@ -154,7 +155,7 @@ namespace RealEstate.Views.AgentViews
                 foreach (var list in listingInfo)
                 {
                     DatabaseManager dbManager2 = new DatabaseManager();
-                    var propertyInfo = dbManager2.ReturnQuery("SELECT Client_ID, Property_Unit_No, Address_ID FROM Property WHERE Property_ID = " + Convert.ToInt32(list[1]) + " ORDER BY Property_ID;");
+                    var propertyInfo = dbManager2.ReturnQuery("SELECT Client_ID, Property_Unit_No, Address_ID, Complex_ID FROM Property WHERE Property_ID = " + Convert.ToInt32(list[1]) + " ORDER BY Property_ID;");
                     foreach (var property in propertyInfo)
                     {
                         DatabaseManager dbManager3 = new DatabaseManager();
@@ -162,8 +163,31 @@ namespace RealEstate.Views.AgentViews
                         foreach (var address in adressInfo)
                         {
                             DatabaseManager dbManager4 = new DatabaseManager();
-                            var complexInfo = dbManager4.ReturnQuery("SELECT Complex_Name FROM Complex WHERE Address_ID = " + Convert.ToInt32(address[0]) + " ORDER BY Complex_ID;");
-                            foreach (var complex in complexInfo)
+                            if (Convert.ToInt32(property[3]) != 0 && Convert.ToInt32(property[3]) != -1)
+                            {
+                                var complexInfo = dbManager4.ReturnQuery("SELECT Complex_Name FROM Complex WHERE Address_ID = " + Convert.ToInt32(address[0]) + " ORDER BY Complex_ID;");
+                                foreach (var complex in complexInfo)
+                                {
+                                    DatabaseManager dbManager5 = new DatabaseManager();
+                                    var clientInfo = dbManager5.ReturnQuery("SELECT Client_Email FROM Clients WHERE Client_ID = " + Convert.ToInt32(property[0]) + " ORDER BY Client_ID;");
+                                    foreach (var client in clientInfo)
+                                    {
+                                        string yesNoSold;
+                                        string yesNoNegotiable;
+                                        if (Convert.ToInt32(list[4]) == 0)
+                                            yesNoNegotiable = "No";
+                                        else
+                                            yesNoNegotiable = "Yes";
+                                        if (Convert.ToInt32(list[5]) == 0)
+                                            yesNoSold = "No";
+                                        else
+                                            yesNoSold = "Yes";
+
+                                        InsertIntoListingsGrid(Convert.ToInt32(list[0]), client[0], address[1] + " " + address[2], complex[0] + " " + property[1], list[2], yesNoSold, yesNoNegotiable, list[6]);
+                                    }
+                                }
+                            }
+                            else
                             {
                                 DatabaseManager dbManager5 = new DatabaseManager();
                                 var clientInfo = dbManager5.ReturnQuery("SELECT Client_Email FROM Clients WHERE Client_ID = " + Convert.ToInt32(property[0]) + " ORDER BY Client_ID;");
@@ -179,8 +203,7 @@ namespace RealEstate.Views.AgentViews
                                         yesNoSold = "No";
                                     else
                                         yesNoSold = "Yes";
-
-                                    InsertIntoListingsGrid(Convert.ToInt32(list[0]), client[0], address[1] + " " + address[2], complex[0] + " " + property[1], list[2], yesNoSold, yesNoNegotiable, list[6]);
+                                    InsertIntoListingsGrid(Convert.ToInt32(list[0]), client[0], address[1] + " " + address[2], "N/A", list[2], yesNoSold, yesNoNegotiable, list[6]);
                                 }
                             }
                         }

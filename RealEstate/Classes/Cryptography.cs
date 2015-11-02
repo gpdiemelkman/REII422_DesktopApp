@@ -62,30 +62,38 @@ namespace RealEstate.Classes
         {
             try
             {
-                byte[] keyArray;
-                byte[] toEncryptArray = Convert.FromBase64String(cipherString);
+                if (cipherString != " " && cipherString != "")
+                {
+                    byte[] keyArray;
+                    byte[] toEncryptArray = Convert.FromBase64String(cipherString);
 
-                System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
-                string key = (string)settingsReader.GetValue("SecurityKey", typeof(String));
+                    System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
+                    string key = (string)settingsReader.GetValue("SecurityKey", typeof(String));
 
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
+                    MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
+                    keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                    hashmd5.Clear();
 
-                TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-                tdes.Key = keyArray;
-                tdes.Mode = CipherMode.ECB;
-                tdes.Padding = PaddingMode.PKCS7;
+                    TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+                    tdes.Key = keyArray;
+                    tdes.Mode = CipherMode.ECB;
+                    tdes.Padding = PaddingMode.PKCS7;
 
-                ICryptoTransform cTransform = tdes.CreateDecryptor();
-                byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+                    ICryptoTransform cTransform = tdes.CreateDecryptor();
+                    byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
 
-                tdes.Clear();
-                return UTF8Encoding.UTF8.GetString(resultArray);
+                    tdes.Clear();
+                    return UTF8Encoding.UTF8.GetString(resultArray);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception e)
             {
                 //Console.WriteLine("DecryptString exception : " + e.ToString());
+                Console.WriteLine("====================DecryptString exception : " + cipherString);
                 return null;
             }
         }

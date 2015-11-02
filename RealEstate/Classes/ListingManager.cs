@@ -9,16 +9,15 @@ namespace RealEstate.Classes
     class ListingManager
     {
         #region Add
-        public bool AddListing(int propertyID, int agentID, int listPrice, int isNegotiable, int isSold)
+        public bool AddListing(int propertyID, int agentID, int listPrice, int isNegotiable, int isSold, string listDescription)
         {
             DatabaseManager dbManager = new DatabaseManager();
-            Console.WriteLine("INSERT INTO Listing (Property_ID, Agent_ID, List_Price, List_isNegotiable, List_isSold) VALUES (" + propertyID + "," + agentID + "," + listPrice + "," + isNegotiable + "," + isSold + ");");
-            return dbManager.NonReturnQuery("INSERT INTO Listing (Property_ID, Agent_ID, List_Price, List_isNegotiable, List_isSold VALUES (" + propertyID + "," + agentID + "," + listPrice + "," + isNegotiable + "," + isSold + ");");
+            return dbManager.NonReturnQuery("INSERT INTO Listing (Property_ID, Agent_ID, List_Price, List_isNegotiable, List_isSold, List_Description) VALUES (" + propertyID + "," + agentID + "," + listPrice + "," + isNegotiable + "," + isSold + ",'" + listDescription + "');");
         }
-        public bool AddListingProperty(int clientID, int addressID, int complexID, int propertyUnitNo, int bedroomCount, int bathroomCount, int garageCount, int hasPool, int plotSize, int houseSize, int propertyValue)
+        public bool AddListingProperty(int clientID, int addressID, int complexID, int propertyUnitNo, int bedroomCount, int bathroomCount, int garageCount, int hasPool, int plotSize, int houseSize, int propertyValue, string propertyDescription)
         {
             DatabaseManager dbManager = new DatabaseManager();
-            return (dbManager.NonReturnQuery("INSERT INTO Property (Client_ID, Address_ID, Complex_ID, Property_Unit_No, Property_Bedroom_Count, Property_Bathroom_Count, Property_Garage_Count, Property_hasPool, Property_Plot_size, Property_House_Size, Property_Value) values (" + clientID + "," + addressID + "," + complexID + "," + propertyUnitNo + "," + bedroomCount + "," + bathroomCount + "," + garageCount + "," + hasPool + "," + plotSize + "," + houseSize + "," + propertyValue + ");"));
+            return (dbManager.NonReturnQuery("INSERT INTO Property (Client_ID, Address_ID, Complex_ID, Property_Unit_No, Property_Bedroom_Count, Property_Bathroom_Count, Property_Garage_Count, Property_hasPool, Property_Plot_size, Property_House_Size, Property_Value, Property_Description) values (" + clientID + "," + addressID + "," + complexID + "," + propertyUnitNo + "," + bedroomCount + "," + bathroomCount + "," + garageCount + "," + hasPool + "," + plotSize + "," + houseSize + "," + propertyValue + ",'" + propertyDescription + "');"));
         }
         public bool AddListingAddress(int areaID, string streetName, int streetNo)
         {
@@ -37,63 +36,35 @@ namespace RealEstate.Classes
         }
         #endregion
 
-
-        public bool EditPreference(int preferenceID, int clientID, int minBedrooms, int maxBedrooms, int minBathrooms, int maxBathrooms, int minGarages, int maxGarages, int minPlotSize, int maxPlotSize, int minHouseSize, int maxHouseSize, int minPrice, int maxPrice, int hasPool)
+        #region Edit
+        public bool EditListing(int listingID, int propertyID, int agentID, int listPrice, int isNegotiable, int isSold, string listDescription)
         {
             DatabaseManager dbManager = new DatabaseManager();
-
-            return (dbManager.NonReturnQuery("UPDATE Preference SET Preference_Min_Bedrooms = " + minBedrooms + ", Preference_Max_Bedrooms = " + maxBedrooms + ", Preference_Min_Bathrooms = " + minBathrooms + ", Preference_Max_Bathrooms = " + maxBathrooms + ", Preference_Min_Garages = " + minGarages + ", Preference_Max_Garages = " + maxGarages + ", Preference_hasPool = " + hasPool + ", Preference_Min_Plot_Size = " + minPlotSize + ", Preference_Max_Plot_Size = " + maxPlotSize + ", Preference_Min_House_Size = " + minHouseSize + ", Preference_Max_House_Size = " + maxHouseSize + ", Preference_Min_Price = " + minPrice + ", Preference_Max_Price = " + maxPrice + " WHERE  (Preference_Client_ID = " + clientID + " AND Preference_ID = " + preferenceID + ");"));
+            return dbManager.NonReturnQuery("UPDATE Listing SET Property_ID = " + propertyID + ", Agent_ID = " + agentID + ", List_Price = " + listPrice + ", List_isNegotiable = " + isNegotiable + ", List_isSold = " + isSold + ", List_Description = '" + listDescription + "' WHERE List_ID = " + listingID + ";");
         }
-        public bool DeletePreference(int preferenceID)
+        public bool EditListingProperty(int propertyID, int clientID, int addressID, int complexID, int propertyUnitNo, int bedroomCount, int bathroomCount, int garageCount, int hasPool, int plotSize, int houseSize, int propertyValue, string propertyDescription)
         {
             DatabaseManager dbManager = new DatabaseManager();
-
-            return (dbManager.NonReturnQuery("DELETE FROM Preference WHERE Preference_ID = " + preferenceID + ";"));
+            return (dbManager.NonReturnQuery("UPDATE Property SET Client_ID = " + clientID + ", Address_ID = " + addressID + ", Complex_ID = " + complexID + ", Property_Unit_No = " + propertyUnitNo + ", Property_Bedroom_Count = " + bedroomCount + ", Property_Bathroom_Count = " + bathroomCount + ", Property_Garage_Count = " + garageCount + ", Property_hasPool = " + hasPool + ", Property_Plot_size = " + plotSize + ", Property_House_Size = " + houseSize + ", Property_Value = " + propertyValue + ", Property_Description = '" + propertyDescription + "' WHERE Property_ID = " + propertyID + ";"));
         }
-        public bool DeletePreferenceArea(int preferenceID, string areaIn)
-        {
-            string[] area;
-            string[] dell = new string[] { ", " };
-            area = areaIn.Split(dell, System.StringSplitOptions.None);
-            DatabaseManager dbManager = new DatabaseManager();
-            LocationManager locManager = new LocationManager();
-
-            return (dbManager.NonReturnQuery("DELETE FROM Preference_Area WHERE Preference_ID = " + preferenceID + " AND Area_ID = " + locManager.AreaID(locManager.CityID(area[1], locManager.ProvinceID(area[0])), area[2]) + ";"));
-        }
-        public bool CanAddPreference(int clientID, int minBedrooms, int maxBedrooms, int minBathrooms, int maxBathrooms, int minGarages, int maxGarages, int minPlotSize, int maxPlotSize, int minHouseSize, int maxHouseSize, int minPrice, int maxPrice, int hasPool)
+        public bool EditListingAddress(int addressID, int areaID, string streetName, int streetNo)
         {
             DatabaseManager dbManager = new DatabaseManager();
-
-            bool canAdd = true;
-
-
-            var preferenceEmails = dbManager.ReturnQuery("SELECT Preference_ID FROM Preference WHERE (Preference_Client_ID = " + clientID + " AND Preference_Min_Bedrooms = " + minBedrooms + " AND Preference_Max_Bedrooms = " + maxBedrooms + " AND Preference_Min_Bathrooms = " + minBathrooms + " AND Preference_Max_Bathrooms = " + maxBathrooms + " AND Preference_Min_Garages = " + minGarages + " AND Preference_Max_Garages = " + maxGarages + " AND Preference_hasPool = " + hasPool + " AND Preference_Min_Plot_Size = " + minPlotSize + " AND Preference_Max_Plot_Size = " + maxPlotSize + " AND Preference_Min_House_Size = " + minHouseSize + " AND Preference_Max_House_Size = " + maxHouseSize + " AND Preference_Min_Price = " + minPrice + " AND Preference_Max_Price = " + maxPrice + ");");
-
-            foreach (var preferenceEmail in preferenceEmails)
-            {
-                canAdd = false;
-                break;
-            }
-
-            return canAdd;
+            return (dbManager.NonReturnQuery("UPDATE Address SET Area_ID = " + areaID + ", Address_Streetname = '" + streetName + "', Address_Streetno = " + streetNo + " WHERE Address_ID = " + addressID + ";"));
         }
-        public bool ClearPreferenceArea(int preferenceID)
+        public bool EditListingComplex(int complexID, string complexName, int addressID)
         {
             DatabaseManager dbManager = new DatabaseManager();
-            return (dbManager.NonReturnQuery("DELETE FROM Preference_Area WHERE Preference_ID = " + preferenceID + ";"));
+            return (dbManager.NonReturnQuery("UPDATE Complex SET Complex_Name = '" + complexName + "', Address_ID = " + addressID + " WHERE Complex_ID = " + complexID + ";"));
         }
-        public int GetPreferenceID(int clientID)
+        public bool EditListingImage(int imageID, string caption)
         {
             DatabaseManager dbManager = new DatabaseManager();
-            int preferenceID = 0;
-            var preferences = (dbManager.ReturnQuery("SELECT Preference_ID FROM Preference WHERE Preference_Client_ID = " + clientID.ToString() + " ORDER BY Preference_ID ASC;"));
-            foreach (var i in preferences)
-            {
-                preferenceID = Convert.ToInt32(i[0]);
-            }
-            return preferenceID;
+            return (dbManager.NonReturnQuery("UPDATE Image SET Image_Caption = '" + caption + "' WHERE Image_ID = " + imageID + ";"));
         }
+        #endregion
 
+        #region Get
         public List<string> GetClients()
         {
             DatabaseManager dbManager = new DatabaseManager();
@@ -108,12 +79,11 @@ namespace RealEstate.Classes
             }
             return clients_Email;
         }
-
         public List<string> GetProvinces()
         {
             DatabaseManager dbManager = new DatabaseManager();
             List<string> province_Names = new List<string>();
-            var provinces = (dbManager.ReturnQuery("SELECT Province_Name FROM Province"));
+            var provinces = (dbManager.ReturnQuery("SELECT Province_Name FROM Province ORDER BY Province_Name"));
             string provinceName;
             foreach (var i in provinces)
             {
@@ -126,7 +96,7 @@ namespace RealEstate.Classes
         {
             DatabaseManager dbManager = new DatabaseManager();
             List<string> city_Names = new List<string>();
-            var citiesName = (dbManager.ReturnQuery("SELECT City_Name FROM City WHERE City_Province_ID = " + city_Province_ID + ""));
+            var citiesName = (dbManager.ReturnQuery("SELECT City_Name FROM City WHERE City_Province_ID = " + city_Province_ID + " ORDER BY City_Name"));
             string cityName;
             foreach (var i in citiesName)
             {
@@ -139,7 +109,7 @@ namespace RealEstate.Classes
         {
             DatabaseManager dbManager = new DatabaseManager();
             List<string> area_Names = new List<string>();
-            var areasName = (dbManager.ReturnQuery("SELECT Area_Name FROM Area WHERE Area_City_ID = " + area_City_ID + ""));
+            var areasName = (dbManager.ReturnQuery("SELECT Area_Name FROM Area WHERE Area_City_ID = " + area_City_ID + " ORDER BY Area_Name"));
             string areaName;
             foreach (var i in areasName)
             {
@@ -165,7 +135,7 @@ namespace RealEstate.Classes
         {
             DatabaseManager dbManager = new DatabaseManager();
             List<int> provinces_ID = new List<int>();
-            var provincesID = (dbManager.ReturnQuery("SELECT Province_ID FROM Province"));
+            var provincesID = (dbManager.ReturnQuery("SELECT Province_ID, Province_Name  FROM Province ORDER BY Province_Name"));
             int provinceID;
             foreach (var i in provincesID)
             {
@@ -178,7 +148,7 @@ namespace RealEstate.Classes
         {
             DatabaseManager dbManager = new DatabaseManager();
             List<int> cities_ID = new List<int>();
-            var citiesID = (dbManager.ReturnQuery("SELECT City_ID FROM City WHERE City_Province_ID = " + city_Province_ID + ""));
+            var citiesID = (dbManager.ReturnQuery("SELECT City_ID, City_Name FROM City WHERE City_Province_ID = " + city_Province_ID + " ORDER BY City_Name"));
             int cityID;
             foreach (var i in citiesID)
             {
@@ -191,7 +161,7 @@ namespace RealEstate.Classes
         {
             DatabaseManager dbManager = new DatabaseManager();
             List<int> areas_ID = new List<int>();
-            var areasID = (dbManager.ReturnQuery("SELECT Area_ID FROM Area WHERE Area_City_ID = " + area_City_ID + ""));
+            var areasID = (dbManager.ReturnQuery("SELECT Area_ID, Area_Name FROM Area WHERE Area_City_ID = " + area_City_ID + " ORDER BY Area_Name"));
             int areaID;
             foreach (var i in areasID)
             {
@@ -234,6 +204,17 @@ namespace RealEstate.Classes
             }
             return propertyID;
         }
+        public int GetPropertyID(int agentID, int listingID)
+        {
+            DatabaseManager dbManager = new DatabaseManager();
+            int propertyID = 0;
+            var properties = (dbManager.ReturnQuery("SELECT Property_ID FROM Listing WHERE Agent_ID = " + agentID + " AND List_ID = " + listingID + " ORDER BY Property_ID ASC;"));
+            foreach (var i in properties)
+            {
+                propertyID = Convert.ToInt32(i[0]);
+            }
+            return propertyID;
+        }
         public int GetAgentID(string agentEmail)
         {
             DatabaseManager dbManager = new DatabaseManager();
@@ -245,5 +226,63 @@ namespace RealEstate.Classes
             }
             return agentID;
         }
+        #endregion
+
+        #region Count
+        private int countPropertiesWithAddress(int addressID)
+        {
+            int count = -1;
+            DatabaseManager dbManager = new DatabaseManager();
+            var addressess = (dbManager.ReturnQuery("SELECT * FROM Address WHERE (Adress_ID = " + addressID + ")"));
+            foreach (var address in addressess)
+            {
+                count++;
+            }
+            return count;
+        }
+        private int countPropertiesInComplex(int complexID)
+        {
+            int count = -1;
+            DatabaseManager dbManager = new DatabaseManager();
+            var complexes = (dbManager.ReturnQuery("SELECT * FROM Complex WHERE (Complex_ID = '" + complexID + ")"));
+            foreach (var complex in complexes)
+            {
+                count++;
+            }
+            return count;
+        }
+        #endregion
+
+        public bool DeleteListing(int listingID)
+        {
+            int propID = -1;
+            int addID = -1;
+            int compID = -1;
+            DatabaseManager dbManager = new DatabaseManager();
+            var propIDs = dbManager.ReturnQuery("SELECT Property_ID FROM Listing WHERE List_ID = " + listingID);
+            foreach (var i in propIDs)
+            {
+                propID = Convert.ToInt32(i[0]);
+            }
+            var compIDs = dbManager.ReturnQuery("SELECT Complex_ID FROM Property WHERE Property_ID = " + propID);
+            foreach (var i in compIDs)
+            {
+                compID = Convert.ToInt32(i[0]);
+            }
+            var addIDs = dbManager.ReturnQuery("SELECT Address_ID FROM Property WHERE Property_ID = " + propID);
+            foreach (var i in addIDs)
+            {
+                addID = Convert.ToInt32(i[0]);
+            }
+            if (countPropertiesInComplex(compID) == 0 && countPropertiesWithAddress(addID) == 0)
+                return (dbManager.NonReturnQuery("DELETE FROM Image, Complex, Address, Property, Listing USING Image, Complex, Address, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
+            else if (countPropertiesInComplex(compID) == 0 && countPropertiesWithAddress(addID) != 0)
+                return (dbManager.NonReturnQuery("DELETE FROM Image, Complex, Property, Listing USING Image, Complex, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND  Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Listing.List_ID =" + listingID + ");"));
+            else if (countPropertiesInComplex(compID) != 0 && countPropertiesWithAddress(addID) == 0)
+                return (dbManager.NonReturnQuery("DELETE FROM Image, Address, Property, Listing USING Image, Address, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND  Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
+            else
+                return (dbManager.NonReturnQuery("DELETE FROM Image, Complex, Address, Property, Listing USING Image, Complex, Address, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND  Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
+        }
+
     }
 }

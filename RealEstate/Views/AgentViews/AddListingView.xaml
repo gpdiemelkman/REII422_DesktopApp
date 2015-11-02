@@ -40,23 +40,23 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Client : " Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <ComboBox x:Name="CB_Client" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="300" SelectionChanged="CB_Client_SelectionChanged"/>
+                <ComboBox x:Name="CB_Client" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="600" SelectionChanged="CB_Client_SelectionChanged"/>
 
                 <TextBlock Text="Address : " Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2" HorizontalAlignment="Left">
-                    <ComboBox x:Name="CB_Province" HorizontalAlignment="Left"  Width="100" SelectionChanged="CB_Province_SelectionChanged"/>
-                    <ComboBox x:Name="CB_City" HorizontalAlignment="Center" Width="100" SelectionChanged="CB_City_SelectionChanged"/>
-                    <ComboBox x:Name="CB_Area" HorizontalAlignment="Right" Width="100" SelectionChanged="CB_Area_SelectionChanged"/>
+                    <ComboBox x:Name="CB_Province" HorizontalAlignment="Left"  Width="200" SelectionChanged="CB_Province_SelectionChanged"/>
+                    <ComboBox x:Name="CB_City" HorizontalAlignment="Center" Width="200" SelectionChanged="CB_City_SelectionChanged"/>
+                    <ComboBox x:Name="CB_Area" HorizontalAlignment="Right" Width="200" SelectionChanged="CB_Area_SelectionChanged"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Left" Grid.Column="1" VerticalAlignment="Center" >
                     <TextBlock  Text="Streetname " VerticalAlignment="Center"/>
-                    <TextBox x:Name="TB_Streetname"  Width="75" VerticalAlignment="Center"/>
+                    <TextBox x:Name="TB_Streetname"  Width="150" VerticalAlignment="Center"/>
                     <TextBlock Text=" Streetno " VerticalAlignment="Center"/>
                     <TextBox x:Name="TB_Streetno" Width="75" VerticalAlignment="Center"/>
                 </StackPanel>
@@ -68,7 +68,7 @@
 
                 <StackPanel x:Name="SP_ComplexDetails" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Left" Grid.Column="1" Visibility="Hidden">
                     <TextBlock x:Name="TBL_ComplexName" Text="Name : " VerticalAlignment="Center" />
-                    <TextBox x:Name="TB_ComplexName" Grid.Column="1" VerticalAlignment="Center"   Width="75" />
+                    <TextBox x:Name="TB_ComplexName" Grid.Column="1" VerticalAlignment="Center"   Width="150" />
                     <TextBlock x:Name="TBL_ComplexNo" Text="Complex Number : " VerticalAlignment="Center"  />
                     <TextBox x:Name="TB_ComplexNo" VerticalAlignment="Center"  Width="75" />
                 </StackPanel>
@@ -86,19 +86,22 @@
 
                 <TextBox x:Name ="TB_Bedrooms" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Width="75"/>
                 <TextBox x:Name="TB_Bathrooms" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Width="75"/>
-                <TextBox x:Name="TB_Garages" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Width="75" Margin="0,7,0,6"/>
+                <TextBox x:Name="TB_Garages" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Width="75" />
                 <TextBox x:Name="TB_PlotSize"  Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Width="75"/>
                 <TextBox x:Name="TB_HouseSize"   Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Width="75"/>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1" Grid.Row="9">
-                    <TextBox x:Name="TB_Price" HorizontalAlignment="Left" VerticalAlignment="Center"  Width="100"/>
+                    <TextBox x:Name="TB_Price" HorizontalAlignment="Left" VerticalAlignment="Center"  Width="150"/>
                     <Button x:Name="BT_Estimate" Content="Estimate"  HorizontalAlignment="Center" VerticalAlignment="Center"  />
                 </StackPanel>
 
-                <TextBox x:Name="TB_ListPrice" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100"/>
+                <TextBox x:Name="TB_ListPrice" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150"/>
                 <CheckBox x:Name="CB_isNegotiable" Grid.Row="11" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
                 <CheckBox x:Name="CB_isSold" Grid.Row="12" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
                 <CheckBox x:Name="CB_hasPool" Grid.Row="13" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
+
+                <TextBlock Text="Description: " Grid.Row="14" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <TextBox x:Name="TB_Description"   Grid.Row="14" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Width="600"/>
             </Grid>
         </GroupBox>
         

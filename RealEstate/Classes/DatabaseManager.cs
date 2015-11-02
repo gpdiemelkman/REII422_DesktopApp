@@ -108,11 +108,18 @@ namespace RealEstate.Classes
         /// <returns>string array with rows and columns corresponding to query result</returns>
         public IEnumerable<string[]> ReturnQuery(string query)
         {
+
             if (OpenDatabase())
             {
                 MySqlCommand command = connection.CreateCommand();
-                command.CommandText = string.Format(query);
-
+                try
+                {
+                    command.CommandText = string.Format(query);
+                }
+                catch
+                {
+                    Console.WriteLine("=============================SQLError @ ReturnQuery: " + query);
+                }
                 MySqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -127,7 +134,7 @@ namespace RealEstate.Classes
                 }
                 reader.Close();
                 CloseDatabase();
-            }
+            }            
         }
 
         /// <summary>
@@ -151,6 +158,7 @@ namespace RealEstate.Classes
                 }
                 catch
                 {
+                    Console.WriteLine("=============================SQLError @ NonReturnQuery: " + query);
                     querySuccess = false;
                 }
             }

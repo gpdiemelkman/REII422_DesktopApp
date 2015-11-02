@@ -20,6 +20,7 @@ namespace RealEstate.Overlays.Location
     /// </summary>
     public partial class AddAreaOverlay
     {
+        List<int> provinceID= new List<int>();
         public event EventHandler OnExit;
 
         public AddAreaOverlay()
@@ -35,8 +36,8 @@ namespace RealEstate.Overlays.Location
 
         private void RE_AddArea_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadCities();
-            CB_Cities.SelectedIndex = 0;
+            LoadProvinces();
+            CB_Provinces.SelectedIndex = 0;
         }
 
         private void BT_Close_Click(object sender, RoutedEventArgs e)
@@ -50,37 +51,66 @@ namespace RealEstate.Overlays.Location
         }
 
         #region Form Control
+        private void LoadProvinces()
+        {
+            new System.Threading.Thread(() =>
+            {
+                Classes.DatabaseManager dbManger = new Classes.DatabaseManager();
+                ClearCities();
+                var provs = dbManger.ReturnQuery("SELECT Province_Name, Province_ID FROM Province ORDER BY Province_Name;");
 
-        private void LoadCities()
+                foreach (var prov in provs)
+                {
+                    InsertProvince(prov[0]);
+                    provinceID.Add(Convert.ToInt32(prov[1]));
+                }
+
+            }).Start();
+        }
+        private void LoadCities(int currentProvince)
         {
             new System.Threading.Thread(() =>
                 {
                     Classes.DatabaseManager dbManger = new Classes.DatabaseManager();
                     ClearCities();
-                    var cities = dbManger.ReturnQuery("SELECT City_Name, Province_Name FROM City,Province WHERE Province_ID = City_Province_ID ORDER BY Province_Name,City_Name;");
+                    var cities = dbManger.ReturnQuery("SELECT City_Name FROM City WHERE City_Province_ID =" + currentProvince + " ORDER BY City_Name;");
 
                     foreach( var city in cities)
                     {
-                        InsertCity(city[0],city[1]);
+                        InsertCity(city[0]);
                     }
                    
                 }).Start();
         }
 
-        private void InsertCity(string cityName,string provinceName)
+        private void InsertCity(string cityName)
         {
             this.Dispatcher.Invoke(() =>
-                {
-                    CB_Cities.Items.Add(cityName + "," + provinceName);
-                });
+            {
+                CB_Cities.Items.Add(cityName);
+            });
+        }
+        private void InsertProvince(string provinceName)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                CB_Provinces.Items.Add(provinceName);
+            });
         }
 
         private void ClearCities()
         {
             this.Dispatcher.Invoke(() =>
-                {
-                    CB_Cities.Items.Clear();
-                });
+            {
+                CB_Cities.Items.Clear();
+            });
+        }
+        private void ClearProvinces()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                CB_Provinces.Items.Clear();
+            });
         }
 
         private void SetLoadingState(bool loading)
@@ -90,6 +120,7 @@ namespace RealEstate.Overlays.Location
                     if( loading )
                     {
                         CB_Cities.IsEnabled = false;
+                        CB_Provinces.IsEnabled = false;
                         TB_AreaName.IsEnabled = false;
                         BT_Add.IsEnabled = false;
                         BT_Close.IsEnabled = false;
@@ -98,6 +129,7 @@ namespace RealEstate.Overlays.Location
                     else
                     {
                         CB_Cities.IsEnabled = true;
+                        CB_Provinces.IsEnabled = true;
                         TB_AreaName.IsEnabled = true;
                         BT_Add.IsEnabled = true;
                         BT_Close.IsEnabled = true;
@@ -112,6 +144,7 @@ namespace RealEstate.Overlays.Location
                 {
                     TB_AreaName.Text = "";
                     CB_Cities.SelectedIndex = 0;
+                    CB_Provinces.SelectedIndex = 0;
                 });
         }
 
@@ -145,18 +178,7 @@ namespace RealEstate.Overlays.Location
 
             this.Dispatcher.Invoke(() =>
                 {
-                    string tempVal = CB_Cities.SelectedValue.ToString();
-                    bool commaFound = false;
-
-                    for( int i =0;i<tempVal.Length;i++ )
-                    {
-                        if (tempVal[i] == ',')
-                            commaFound = true;
-
-                        if (!commaFound)
-                            cityName += tempVal[i];
-                    }
-
+                    cityName = CB_Cities.SelectedValue.ToString();
                 });
 
             return cityName;
@@ -168,17 +190,7 @@ namespace RealEstate.Overlays.Location
 
             this.Dispatcher.Invoke(() =>
                 {
-                    string tempVal = CB_Cities.SelectedValue.ToString();
-                    bool commaFoud = false;                    
-
-                    for(int i = 0; i < tempVal.Length ; i++)
-                    {
-                        if( commaFoud )
-                            provinceName += tempVal[i];
-
-                        if (tempVal[i] == ',')
-                            commaFoud = true;
-                    }
+                    provinceName = CB_Provinces.SelectedValue.ToString();                  
                 });
 
             return provinceName;
@@ -221,6 +233,12 @@ namespace RealEstate.Overlays.Location
                     }
 
                 }).Start();
+        }
+
+        private void CB_Provinces_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CB_Provinces.SelectedIndex != -1 && provinceID.Count !=0 )
+                LoadCities(provinceID[CB_Provinces.SelectedIndex]);
         }
 
         

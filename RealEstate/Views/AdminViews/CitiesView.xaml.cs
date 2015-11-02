@@ -58,7 +58,7 @@ namespace RealEstate.Views.AdminViews
                     ClearCities();
                     Classes.DatabaseManager dbManager = new Classes.DatabaseManager();
 
-                    var cities = dbManager.ReturnQuery("SELECT City_Name, Province_Name FROM City,Province WHERE Province_ID = City_Province_ID");
+                    var cities = dbManager.ReturnQuery("SELECT City_Name, Province_Name FROM City,Province WHERE Province_ID = City_Province_ID ORDER BY City_Name");
 
                     foreach( var city in cities)
                     {
