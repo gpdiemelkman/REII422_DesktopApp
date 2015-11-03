@@ -97,28 +97,36 @@ namespace RealEstate.Overlays.Location
                     if( GetProvinceName() != "" )
                     {
                         Classes.LocationManager locationManager = new Classes.LocationManager();
-
-                        if (locationManager.CanAddProvince(GetProvinceName()))
+                        Classes.Validation valid = new Classes.Validation();
+                        if (valid.TextIsShorterThan(GetProvinceName(), 32))
                         {
-                            SetLoadingState(true);
-
-                            if (locationManager.AddProvince(GetProvinceName()))
+                            if (locationManager.CanAddProvince(GetProvinceName()))
                             {
-                                DisplayNotifyBox(GetProvinceName() + " Added", GetProvinceName() + " has been added successfully", 2);
-                                ClearForm();
+                                SetLoadingState(true);
+
+                                if (locationManager.AddProvince(GetProvinceName()))
+                                {
+                                    DisplayNotifyBox(GetProvinceName() + " Added", GetProvinceName() + " has been added successfully", 2);
+                                    ClearForm();
+                                }
+                                else
+                                {
+                                    DisplayNotifyBox("Could not Add", GetProvinceName() + " was not added", 2);
+                                }
+
+                                SetLoadingState(false);
+
                             }
                             else
                             {
-                                DisplayNotifyBox("Could not Add", GetProvinceName() + " was not added", 2);
+                                DisplayNotifyBox("Cannot add " + GetProvinceName(), "A province with the same name already exists", 2);
                             }
-
-                            SetLoadingState(false);
-
                         }
                         else
                         {
-                            DisplayNotifyBox("Cannot add " + GetProvinceName(), "A province with the same name already exists", 2);
+                            DisplayNotifyBox("ERROR", "Province name must be shorter than 32 character", 5);
                         }
+                        
                     }
                     else
                     {

@@ -44,7 +44,39 @@ namespace RealEstate.Classes
         {
             return (text.Length > length ? true : false);
         }
+        public bool TextIsShorterThan(string text, int length)
+        {
+            return (text.Length < length ? true : false);
+        }
+        public bool TextContainsUpperCase(string text)
+        {
+            return text.Any(c => !Char.IsUpper(c));
+        }
+        public bool TextisEmail(string text)
+        {
+            return (text.Contains('@') && text.Contains('.'));
+        }
+        public bool DateTest(string text)
+        {
+            bool flag = false;
+            string [] date =text.Split(new string[] { "-" }, StringSplitOptions.None);            
+            if(text.Length == 10)
+            {
+                if (date.Count() == 3)
+                {
+                    string year = date[0];
+                    string month = date[1];
+                    string day = date[2];
 
+                    if(IsTextNumeric(year) && IsTextNumeric(month) && IsTextNumeric(day))
+                    {
+                        if (year.Length == 4 && month.Length == 2 && day.Length == 2)
+                            flag = true;
+                    }
+                }
+            }
+            return flag;
+        }
         public bool TextContainsBlankSpaces(string text)
         {
             return text.Contains(' ');

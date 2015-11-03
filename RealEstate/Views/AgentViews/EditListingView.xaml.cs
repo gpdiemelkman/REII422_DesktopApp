@@ -68,6 +68,7 @@ namespace RealEstate.Views.AgentViews
         public EditListingView()
         {
             InitializeComponent();
+            TB_ImageCaption.IsEnabled = false;
         }
         #region Input Response
         private void CB_Complex_Click(object sender, RoutedEventArgs e)
@@ -101,6 +102,7 @@ namespace RealEstate.Views.AgentViews
 
                 CB_Images.Items.Add(dialog.FileName.ToString());
                 IMG_SelectedImage.Source = CloneImage(dialog.FileName.ToString());
+                TB_ImageCaption.IsEnabled = true;
                 imageSource.Add(dialog.FileName.ToString());
                 imageCaptions.Add("");
                 imageID.Add(-1);
@@ -111,6 +113,7 @@ namespace RealEstate.Views.AgentViews
                 else
                 {
                     CB_Images.SelectedIndex = CB_Images.Items.Count - 1;
+                    TB_ImageCaption.IsEnabled = false;
                 }
             }
         }
@@ -119,7 +122,12 @@ namespace RealEstate.Views.AgentViews
             if (CB_Images.SelectedIndex != -1)
             {
                 IMG_SelectedImage.Source = CloneImage(CB_Images.SelectedValue.ToString());
+                TB_ImageCaption.IsEnabled = true;
                 TB_ImageCaption.Text = imageCaptions[CB_Images.SelectedIndex].ToString();
+            }
+            else
+            {
+                TB_ImageCaption.IsEnabled = false;
             }
         }
         private void CB_Client_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -174,6 +182,7 @@ namespace RealEstate.Views.AgentViews
         }
         private void BT_Delete_Click(object sender, RoutedEventArgs e)
         {
+            TB_ImageCaption.IsEnabled = false;
             imageSource.Remove(CB_Images.SelectedItem.ToString());
             CB_Images.Items.RemoveAt(CB_Images.SelectedIndex);
             IMG_SelectedImage.Source = null;
@@ -264,7 +273,7 @@ namespace RealEstate.Views.AgentViews
                     TB_Description.IsEnabled = true;
                     TB_Garages.IsEnabled = true;
                     TB_HouseSize.IsEnabled = true;
-                    TB_ImageCaption.IsEnabled = true;
+                    TB_ImageCaption.IsEnabled = false;
                     TB_ListPrice.IsEnabled = true;
                     TB_PlotSize.IsEnabled = true;
                     TB_Price.IsEnabled = true;
@@ -357,7 +366,7 @@ namespace RealEstate.Views.AgentViews
                     {
                         DownloadImage(image[2]);
                     }
-
+                    TB_ImageCaption.IsEnabled = false;
                     //LoadImage
                 }
             });
@@ -492,29 +501,43 @@ namespace RealEstate.Views.AgentViews
         }
         private void LoadVariablesTB()
         {
-            streetName = TB_Streetname.Text;
-            streetNo = Convert.ToInt32(TB_Streetno.Text);
-            bedrooms = Convert.ToInt32(TB_Bedrooms.Text);
-            bathrooms = Convert.ToInt32(TB_Bathrooms.Text);
-            garages = Convert.ToInt32(TB_Garages.Text);
-            plotSize = Convert.ToInt32(TB_PlotSize.Text);
-            houseSize = Convert.ToInt32(TB_HouseSize.Text);
-            propertyPrice = Convert.ToInt32(TB_ListPrice.Text);
-            propertyValue = Convert.ToInt32(TB_Price.Text);
-            isSold = Convert.ToInt32(CB_isSold.IsChecked);
-            isNegotiable = Convert.ToInt32(CB_isNegotiable.IsChecked);
-            hasPool = Convert.ToInt32(CB_hasPool.IsChecked);
-            description = TB_Description.Text;
-
-            complexName = "Null";
-            complexNo = 0;
-
-            if (CB_Complex.IsChecked == true)
+            Classes.Validation valid = new Classes.Validation();
+            if (valid.TextIsShorterThan(TB_Streetname.Text, 32) && valid.TextIsShorterThan(TB_Description.Text, 300) && valid.IsTextNumeric(TB_Streetno.Text) && valid.IsTextNumeric(TB_Bedrooms.Text) && valid.IsTextNumeric(TB_Bathrooms.Text) && valid.IsTextNumeric(TB_Garages.Text) && valid.IsTextNumeric(TB_PlotSize.Text) && valid.IsTextNumeric(TB_HouseSize.Text) && valid.IsTextNumeric(TB_ListPrice.Text) && valid.IsTextNumeric(TB_Price.Text) && valid.IsTextNumeric(TB_ComplexNo.Text) )
             {
-                complexName = TB_ComplexName.Text;
-                complexNo = Convert.ToInt32(TB_ComplexNo.Text);
-            }
+                streetName = TB_Streetname.Text;
+                streetNo = Convert.ToInt32(TB_Streetno.Text);
+                bedrooms = Convert.ToInt32(TB_Bedrooms.Text);
+                bathrooms = Convert.ToInt32(TB_Bathrooms.Text);
+                garages = Convert.ToInt32(TB_Garages.Text);
+                plotSize = Convert.ToInt32(TB_PlotSize.Text);
+                houseSize = Convert.ToInt32(TB_HouseSize.Text);
+                propertyPrice = Convert.ToInt32(TB_ListPrice.Text);
+                propertyValue = Convert.ToInt32(TB_Price.Text);
+                isSold = Convert.ToInt32(CB_isSold.IsChecked);
+                isNegotiable = Convert.ToInt32(CB_isNegotiable.IsChecked);
+                hasPool = Convert.ToInt32(CB_hasPool.IsChecked);
+                description = TB_Description.Text;
 
+                complexName = "Null";
+                complexNo = 0;
+
+                if (CB_Complex.IsChecked == true)
+                {
+                    complexName = TB_ComplexName.Text;
+                    complexNo = Convert.ToInt32(TB_ComplexNo.Text);
+                }
+            }
+            else
+            {
+                DisplayNotifyBox("ERROR", "Invalid Input. Please ensure all text inputs are below 32 characters, 300 for the description. Also streetnumber, bedrooms, bathrooms, garages, plotsize, house size, property price and property value must be numeric", 15);
+            }
+        }
+        private void DisplayNotifyBox(string title, string message, int durationSeconds)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                NotifyBox.Show(null, title, message, new TimeSpan(0, 0, durationSeconds), false);
+            });
         }
         private void LoadArea()
         {
@@ -587,7 +610,29 @@ namespace RealEstate.Views.AgentViews
         }            
         private void UploadImages()
         {
-            Overlays.Listings.LoadingOverlay uploadImages = new Overlays.Listings.LoadingOverlay(propertyID, imageSource, imageCaptions, imageID);
+            List<int> delImage = new List<int>();
+            ListingManager listManager = new ListingManager();
+            for(int i = 0; i<imageSource.Count; i++)
+            {
+                if (imageSource[i] == " " || imageSource[i] == "")
+                {
+                    delImage.Add(i);
+                    listManager.EditListingImage(imageID[i],imageCaptions[i]);
+                }
+            }
+            for (int i = delImage.Count - 1; i >= 0; i--)
+            {
+                if (delImage.IndexOf(i) != -1)
+                {
+                    imageSource.RemoveAt(i);
+                    imageCaptions.RemoveAt(i);
+                }
+            }
+                for (int i = 0; i < imageSource.Count; i++)
+                {
+                    Console.WriteLine(i + " New " + imageID[i] + " - " + imageSource[i] + " with " + imageCaptions[i] + " of " + imageSource.Count);
+                }
+            Overlays.Listings.LoadingOverlay uploadImages = new Overlays.Listings.LoadingOverlay(propertyID, imageSource, imageCaptions);
             uploadImages.Owner = Framework.UI.Controls.Window.GetWindow(this);
             uploadImages.Show();            
             (this.Tag as AgentWindow).HideEditListingView();

@@ -23,7 +23,6 @@ namespace RealEstate.Overlays.Listings
     {
         List<string> localFilePaths;
         List<string> imageCaptions;
-        List<int> imageIDs;
         int propertyID;
         int numberOfImages = 0;
         int numberToUpload= 0;
@@ -31,13 +30,13 @@ namespace RealEstate.Overlays.Listings
         const string webDir = "ftp://ingeneric.co.za/public_html/RealEstate/";
         const string linkDir = "http://ingeneric.co.za/RealEstate/";
 
-        public LoadingOverlay(int property, List<string> localFiles, List<string> captions, List<int> IDs)
+        public LoadingOverlay(int property, List<string> localFiles, List<string> captions)
         {
             InitializeComponent();
             localFilePaths = localFiles;
             imageCaptions = captions;
-            imageIDs = IDs;
             propertyID = property;
+            Console.WriteLine("Get========== " + imageCaptions.Count);
         }
 
 
@@ -46,55 +45,30 @@ namespace RealEstate.Overlays.Listings
         {
             new System.Threading.Thread(() =>
                 {
-
+                    Console.WriteLine("Intro========== " + imageCaptions.Count);
                     FtpManager ftpManger = new FtpManager();
                     ListingManager listingManager = new ListingManager();
                     ftpManger.OnProgressChange += ftpManger_OnProgressChange;
                     Hashing hashing = new Hashing();
                     List<string> urls = new List<string>();
                     List<string> links = new List<string>();
-
+                    numberOfImages = localFilePaths.Count();
                     foreach( string localFile in localFilePaths)
                     {
-                        numberOfImages++;
-                        if (localFile != " ")
-                        {
-                            numberToUpload++;
-                            string fileHash = hashing.HashFile(localFile);
-                            string extension = System.IO.Path.GetExtension(localFile);
+                        numberToUpload++;
+                        string fileHash = hashing.HashFile(localFile);
+                        string extension = System.IO.Path.GetExtension(localFile);
 
-                            urls.Add(webDir + fileHash + extension);
-                            links.Add(linkDir + fileHash + extension);
-                        }
-                        else
-                        {
-                            urls.Add("");
-                            links.Add("");
-                        }
+                        urls.Add(webDir + fileHash + extension);
+                        links.Add(linkDir + fileHash + extension);
                     }
                     for( int i = 0; i < numberOfImages ; i++)
                     {
-                        Console.WriteLine("===================================recieving " + i + "  " + localFilePaths.Count + " " + imageCaptions.Count + " " + imageIDs.Count);
-                        try
-                        {
-                            Console.WriteLine("===================================try " + i + " for " + localFilePaths[i] + " in " + localFilePaths.Count);
-                            if (localFilePaths[i] != " ")
-                            {
-                                Console.WriteLine("===================================uploading " + i + " for " + localFilePaths[i] + " in " + localFilePaths.Count);
-                                LoadImage(localFilePaths[i]);
-                                UpdateProgress(numberToUpload, i);
-                                ftpManger.UploadFile(localFilePaths[i], urls[i]);
-                                listingManager.AddListingImage(propertyID, links[i], imageCaptions[i]);
-                            }
-                            else
-                            {
-                                listingManager.EditListingImage(imageIDs[i], imageCaptions[i]);
-                            }
-                        }
-                        catch
-                        {
-                            Console.WriteLine("===================================caught " + propertyID + " " + localFilePaths.Count + " " + imageCaptions.Count + " " + imageIDs.Count);
-                        }
+                        LoadImage(localFilePaths[i]);
+                        Console.WriteLine("Pregame========== " + imageCaptions.Count);
+                        UpdateProgress(numberToUpload, i+1);
+                        ftpManger.UploadFile(localFilePaths[i], urls[i]);
+                        listingManager.AddListingImage(propertyID, links[i], imageCaptions[i]);
                     }
 
                     CloseForm();
@@ -129,8 +103,9 @@ namespace RealEstate.Overlays.Listings
         {
             this.Dispatcher.Invoke(()=>
                 {
+                    Console.WriteLine("Update========== " + imageCaptions.Count);
                     TB_ImageCount.Text = " (" + current.ToString() + "/" + max.ToString() + ")";
-                    TB_CurrentCaption.Text = imageCaptions[current];
+                    TB_CurrentCaption.Text = imageCaptions[current-1];
                 });
         }
 

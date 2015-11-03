@@ -212,23 +212,32 @@ namespace RealEstate.Overlays.Location
                 SetLoadingState(true);
                 
                 Classes.LocationManager locationManager = new Classes.LocationManager();
-                
-                if( locationManager.CanAddCity(newCityName,newProvinceName))
+                Classes.Validation valid = new Classes.Validation();
+
+                if (valid.TextIsShorterThan(newCityName, 32))
                 {
-                    if( locationManager.EditCity(oldCityName,oldProvince,newCityName,newProvinceName) )
+                    if (locationManager.CanAddCity(newCityName, newProvinceName))
                     {
-                        DisplayNotifyBox("Edited", oldCityName + "," + oldProvince + " changed to " + newCityName + "," + newProvinceName, 3);
-                        edited = true;
+                        if (locationManager.EditCity(oldCityName, oldProvince, newCityName, newProvinceName))
+                        {
+                            DisplayNotifyBox("Edited", oldCityName + "," + oldProvince + " changed to " + newCityName + "," + newProvinceName, 3);
+                            edited = true;
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("Could not edit", "En error occured. Please try again later", 3);
+                        }
                     }
                     else
                     {
-                        DisplayNotifyBox("Could not edit", "En error occured. Please try again later", 3);
+                        DisplayNotifyBox("Could not edit", "Cannot change " + oldCityName + "," + oldProvince + " to " + newCityName + "," + newProvinceName + " because " + newCityName + "," + newProvinceName + " already exists", 4);
                     }
                 }
                 else
                 {
-                    DisplayNotifyBox("Could not edit","Cannot change " + oldCityName + "," + oldProvince + " to " + newCityName + "," + newProvinceName + " because " + newCityName + "," + newProvinceName + " already exists",4);
+                    DisplayNotifyBox("ERROR", "City name must be shorter than 32 character", 5);
                 }
+                
 
                 SetLoadingState(false);
 

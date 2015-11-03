@@ -94,12 +94,20 @@ namespace RealEstate.Overlays.Client
 
             if (editName || editSurname || editPhone || editEmail || editPassword)
             {
+                Classes.Validation valid = new Classes.Validation();
                 edited = true;
                 if (editName)
                 {
                     if (GetNewName() != "")
                     {
-                        EditName(clientEmail, GetNewName());
+                        if (valid.TextIsShorterThan(GetNewName(), 32))
+                        {
+                            EditName(clientEmail, GetNewName());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a name shorter than 32 characters", 10);
+                        }  
                     }
                     else
                     {
@@ -112,7 +120,14 @@ namespace RealEstate.Overlays.Client
                 {
                     if (GetNewSurname() != "")
                     {
-                        EditSurname(clientEmail, GetNewSurname());
+                        if (valid.TextIsShorterThan(GetNewSurname(), 32))
+                        {
+                            EditSurname(clientEmail, GetNewSurname());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a surname shorter than 32 characters", 10);
+                        }   
                     }
                     else
                     {
@@ -125,7 +140,14 @@ namespace RealEstate.Overlays.Client
                 {
                     if (GetNewPhone() != "")
                     {
-                        EditPhone(clientEmail, GetNewPhone());
+                        if (valid.IsTextNumeric(GetNewPhone()) && valid.TextIsShorterThan(GetNewPhone(), 12))
+                        {
+                            EditPhone(clientEmail, GetNewPhone());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a valid cellphone number with local 099 999 9999 format", 10);
+                        }
                     }
                     else
                     {
@@ -138,7 +160,14 @@ namespace RealEstate.Overlays.Client
                 {
                     if (GetNewEmail() != "")
                     {
-                        EditEmail(clientEmail, GetNewEmail());
+                        if (valid.TextisEmail(GetNewEmail()) && valid.TextIsShorterThan(GetNewEmail(), 32))
+                        {
+                            EditEmail(clientEmail, GetNewEmail());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a valid email address with length shorter than 32 characters", 10);
+                        } 
                     }
                     else
                     {
@@ -151,7 +180,14 @@ namespace RealEstate.Overlays.Client
                 {
                     if (GetNewPassword() != "" && CanEditPassword())
                     {
-                        EditPassword(clientEmail, GetNewPassword());
+                        if (valid.TextHasNumber(GetNewPassword()) && valid.TextHasSpecialChars(GetNewPassword()) && valid.TextIsLongerThan(GetNewPassword(), 8) && valid.TextIsShorterThan(GetNewPassword(), 32) && valid.TextContainsUpperCase(GetNewPassword()))
+                        {
+                            EditPassword(clientEmail, GetNewPassword());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Your password must contain at least one of each of the following: a special character, a number and an uppercase letter. It must also have a length of between 8 and 32 characters.", 10);
+                        }  
                     }
                     else
                     {

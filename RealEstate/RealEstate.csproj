@@ -118,6 +118,7 @@
     <Compile Include="Classes\Hashing.cs" />
     <Compile Include="Classes\ListingManager.cs" />
     <Compile Include="Classes\LocationManager.cs" />
+    <Compile Include="Classes\OfferManager.cs" />
     <Compile Include="Classes\PreferenceManager.cs" />
     <Compile Include="Classes\Session.cs" />
     <Compile Include="Classes\Validation.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="GridViewSources\City.cs" />
     <Compile Include="GridViewSources\Client.cs" />
     <Compile Include="GridViewSources\Listings.cs" />
+    <Compile Include="GridViewSources\Offer.cs" />
     <Compile Include="GridViewSources\Property.cs" />
     <Compile Include="GridViewSources\Province.cs" />
     <Compile Include="Overlays\Admin\AddAdminOverlay.xaml.cs" />
@@ -156,6 +158,12 @@
     <Compile Include="Overlays\Location\EditAreaOverlay.xaml.cs" />
     <Compile Include="Overlays\Location\EditCityOverlay.xaml.cs" />
     <Compile Include="Overlays\Location\EditProvinceOverlay.xaml.cs" />
+    <Compile Include="Overlays\Offers\AddOfferOverlay.xaml.cs">
+      <DependentUpon>AddOfferOverlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlays\Offers\EditOfferOverlay.xaml.cs">
+      <DependentUpon>EditOfferOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Overlays\ServerSettings\ServerSettingsOverlay.xaml.cs" />
     <Compile Include="Service References\BingMapsService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -178,6 +186,9 @@
     </Compile>
     <Compile Include="Views\AgentViews\ManageClientsView.xaml.cs">
       <DependentUpon>ManageClientsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AgentViews\OffersView.xaml.cs">
+      <DependentUpon>OffersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AgentViews\PropertiesViewxaml.xaml.cs">
       <DependentUpon>PropertiesViewxaml.xaml</DependentUpon>
@@ -254,6 +265,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Overlays\Offers\AddOfferOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlays\Offers\EditOfferOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Overlays\ServerSettings\ServerSettingsOverlay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -291,6 +310,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AgentViews\ManageClientsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AgentViews\OffersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

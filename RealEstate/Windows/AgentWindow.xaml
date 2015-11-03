@@ -30,8 +30,10 @@
         <AgentViews:PropertiesView Visibility="Hidden" x:Name="AV_ViewProperties" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
 
         <AgentViews:ManageClientsView Visibility="Hidden" x:Name="AV_MangeClients" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-        
+
         <AgentViews:EditListingView Visibility="Hidden" x:Name="AV_EditListing" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+
+        <AgentViews:OffersView Visibility="Hidden" x:Name="AV_Offers" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" />
 
         <Button x:Name="BT_Listings" Grid.Column="0" Grid.Row="0" Margin="5,5,5,5" Click="BT_Listings_Click">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
@@ -54,10 +56,10 @@
             </StackPanel>
         </Button>
 
-        <Button x:Name="BT_Manage" Grid.Column="1" Grid.Row="1" Margin="5,0,5,10">
+        <Button x:Name="BT_ManageOffers" Grid.Column="1" Grid.Row="1" Margin="5,0,5,10" Click="BT_ManageOffers_Click">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                <extra:Icon Style="{StaticResource Tools1IconStyle}" Size="VeryLarge" />
-                <TextBlock Text="Manage" FontSize="30" />
+                <extra:Icon Style="{StaticResource BankIconStyle}" Size="VeryLarge" />
+                <TextBlock Text="Manage Offers" FontSize="30" />
             </StackPanel>
         </Button>
 

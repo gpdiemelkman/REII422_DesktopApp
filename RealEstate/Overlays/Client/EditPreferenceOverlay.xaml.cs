@@ -78,7 +78,6 @@ namespace RealEstate.Overlays.Client
         }
         private void BT_EditExisting_Click(object sender, RoutedEventArgs e)
         {
-            SetPreferences();
             EditPreferences();
         }
         private void CB_Province_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -407,24 +406,49 @@ namespace RealEstate.Overlays.Client
             }
         }
 
-        private void SetPreferences()
+        private bool SetPreferences()
         {
+            bool flag = false;
+            Classes.Validation valid = new Classes.Validation();
             this.Dispatcher.Invoke(() =>
             {
-                minBedrooms = Convert.ToInt32(CB_MinBedrooms.SelectedItem);
-                maxBedrooms = Convert.ToInt32(CB_MaxBedrooms.SelectedItem);
-                minBathrooms = Convert.ToInt32(CB_MinBathrooms.SelectedItem);
-                maxBathrooms = Convert.ToInt32(CB_MaxBathrooms.SelectedItem);
-                minGarages = Convert.ToInt32(CB_MinGarages.SelectedItem);
-                maxGarages = Convert.ToInt32(CB_MaxGarages.SelectedItem);
-                minPlotSize = Convert.ToInt32(TB_MinPlotSize.Text);
-                maxPlotSize = Convert.ToInt32(TB_MaxPlotSize.Text);
-                minHouseSize = Convert.ToInt32(TB_MinHouseSize.Text);
-                maxHouseSize = Convert.ToInt32(TB_MaxHouseSize.Text);
-                minPrice = Convert.ToInt32(TB_MinPrice.Text);
-                maxPrice = Convert.ToInt32(TB_MaxPrice.Text);
-                hasPool = Convert.ToInt32(CB_HasPool.SelectedIndex.ToString());
+                if (valid.IsTextNumeric(TB_MinPlotSize.Text) && valid.IsTextNumeric(TB_MaxPlotSize.Text) && valid.IsTextNumeric(TB_MinHouseSize.Text) && valid.IsTextNumeric(TB_MaxHouseSize.Text) && valid.IsTextNumeric(TB_MinPrice.Text) && valid.IsTextNumeric(TB_MaxPrice.Text))
+                {
+                    try                  
+                    {
+                        if (valid.IsNumberInRange(Convert.ToInt32(CB_MinBedrooms.SelectedItem), 50, CB_MaxBedrooms.SelectedItem.ToString()) && valid.IsNumberInRange(Convert.ToInt32(CB_MinBathrooms.SelectedItem), 50, CB_MaxBathrooms.SelectedItem.ToString()) && valid.IsNumberInRange(Convert.ToInt32(CB_MinGarages.SelectedItem), 50, CB_MaxGarages.SelectedItem.ToString()) && valid.IsNumberInRange(Convert.ToInt32(TB_MinPlotSize.Text), 2147483645, TB_MaxPlotSize.Text) && valid.IsNumberInRange(Convert.ToInt32(TB_MinHouseSize.Text), 2147483645, TB_MaxHouseSize.Text) && valid.IsNumberInRange(Convert.ToInt32(TB_MinPrice.Text), 2147483645, TB_MaxPrice.Text))
+                        {
+                            minBedrooms = Convert.ToInt32(CB_MinBedrooms.SelectedItem);
+                            maxBedrooms = Convert.ToInt32(CB_MaxBedrooms.SelectedItem);
+                            minBathrooms = Convert.ToInt32(CB_MinBathrooms.SelectedItem);
+                            maxBathrooms = Convert.ToInt32(CB_MaxBathrooms.SelectedItem);
+                            minGarages = Convert.ToInt32(CB_MinGarages.SelectedItem);
+                            maxGarages = Convert.ToInt32(CB_MaxGarages.SelectedItem);
+                            minPlotSize = Convert.ToInt32(TB_MinPlotSize.Text);
+                            maxPlotSize = Convert.ToInt32(TB_MaxPlotSize.Text);
+                            minHouseSize = Convert.ToInt32(TB_MinHouseSize.Text);
+                            maxHouseSize = Convert.ToInt32(TB_MaxHouseSize.Text);
+                            minPrice = Convert.ToInt32(TB_MinPrice.Text);
+                            maxPrice = Convert.ToInt32(TB_MaxPrice.Text);
+                            hasPool = Convert.ToInt32(CB_HasPool.SelectedIndex.ToString());
+                            flag = true;
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please ensure that all min values are smaller than their corresponding max values", 10);
+                        }
+                    }
+                    catch
+                    {
+                        DisplayNotifyBox("ERROR", "Please ensure that all field values are smaller than 2 147 483 645", 10);
+                    }
+                }
+                else
+                {
+                    DisplayNotifyBox("ERROR", "Please ensure that the plotsize, housesize and price fields are numeric", 10);
+                }
             });
+            return flag;
         }
         #endregion
 
@@ -496,57 +520,15 @@ namespace RealEstate.Overlays.Client
             {
                 edited = false;
                 SetLoadingState(true);
-
-                Classes.PreferenceManager preferenceManager = new Classes.PreferenceManager();
-
-                if (preferenceManager.EditPreference(preferenceID, clientID, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minGarages, maxGarages, minPlotSize, maxPlotSize, minHouseSize, maxHouseSize, minPrice, maxPrice, hasPool))
+                if (SetPreferences())
                 {
-                    flag = true;
-                    preferenceManager.ClearPreferenceArea(preferenceID);
-                    for (i = 0; i < CB_PreferedAreas.Items.Count; i++)
+
+                    Classes.PreferenceManager preferenceManager = new Classes.PreferenceManager();
+                    if (preferenceManager.EditPreference(preferenceID, clientID, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minGarages, maxGarages, minPlotSize, maxPlotSize, minHouseSize, maxHouseSize, minPrice, maxPrice, hasPool))
                     {
-                        if (!preferenceManager.AddPreferenceArea(preferenceID, CB_PreferedAreas.Items[i].ToString()))
-                        {
-                            flag = false;
-                            DisplayNotifyBox("Could not edit", "An error occured while trying to add area " + CB_PreferedAreas.Items[i].ToString(), 4);
-                        }
-                    }
-                    if (flag)
-                    {
-                        DisplayNotifyBox("Preference Added", "Preference has been added", 3);
-                        edited = true;
-                    }
-                }
-                else
-                {
-                    DisplayNotifyBox("Could not edit", "An error occured while trying to edit preference. Please try again later", 3);
-                }
-
-                SetLoadingState(false);
-                if (edited)
-                    CloseForm();
-
-            }).Start();
-        }
-
-        private void NewPreferences()
-        {
-            new System.Threading.Thread(() =>
-            {
-                SetLoadingState(true);
-                edited = false;
-                SetPreferences();
-
-                Classes.PreferenceManager preferenceManager = new Classes.PreferenceManager();
-                Classes.DatabaseManager dbManager = new Classes.DatabaseManager();
-
-                if (preferenceManager.CanAddPreference(clientID, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minGarages, maxGarages, minPlotSize, maxPlotSize, minHouseSize, maxHouseSize, minPrice, maxPrice, hasPool))
-                {
-                    if (preferenceManager.AddPreference(clientID, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minGarages, maxGarages, minPlotSize, maxPlotSize, minHouseSize, maxHouseSize, minPrice, maxPrice, hasPool))
-                    {
-                        preferenceID = preferenceManager.GetPreferenceID(clientID);
-                        flag=true;
-                        for(i = 0; i < CB_PreferedAreas.Items.Count; i++)
+                        flag = true;
+                        preferenceManager.ClearPreferenceArea(preferenceID);
+                        for (i = 0; i < CB_PreferedAreas.Items.Count; i++)
                         {
                             if (!preferenceManager.AddPreferenceArea(preferenceID, CB_PreferedAreas.Items[i].ToString()))
                             {
@@ -556,26 +538,72 @@ namespace RealEstate.Overlays.Client
                         }
                         if (flag)
                         {
-                            DisplayNotifyBox("Preference Added", "Preference has been added", 3);
+                            DisplayNotifyBox("Preference edited", "Preference has been edited", 3);
                             edited = true;
                         }
                     }
                     else
                     {
-                        DisplayNotifyBox("Could not edit", "An error occured while trying to add a new preference. Please try again later", 3);
+                        DisplayNotifyBox("Could not edit", "An error occured while trying to edit preference. Please try again later", 3);
                     }
 
+                    SetLoadingState(false);
+                    if (edited)
+                        CloseForm();
                 }
-                else
+            }).Start();
+        }
+
+        private void NewPreferences()
+        {
+            if (SetPreferences())
+            {
+                new System.Threading.Thread(() =>
                 {
-                    DisplayNotifyBox("Could not edit", "The preferences as outlined already exists for this client", 4);
-                }
+                    SetLoadingState(true);
+                    edited = false;
 
-                SetLoadingState(false);
-                if (edited)
-                    CloseForm();
 
-            }).Start(); 
+                    Classes.PreferenceManager preferenceManager = new Classes.PreferenceManager();
+                    Classes.DatabaseManager dbManager = new Classes.DatabaseManager();
+
+                    if (preferenceManager.CanAddPreference(clientID, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minGarages, maxGarages, minPlotSize, maxPlotSize, minHouseSize, maxHouseSize, minPrice, maxPrice, hasPool))
+                    {
+                        if (preferenceManager.AddPreference(clientID, minBedrooms, maxBedrooms, minBathrooms, maxBathrooms, minGarages, maxGarages, minPlotSize, maxPlotSize, minHouseSize, maxHouseSize, minPrice, maxPrice, hasPool))
+                        {
+                            preferenceID = preferenceManager.GetPreferenceID(clientID);
+                            flag = true;
+                            for (i = 0; i < CB_PreferedAreas.Items.Count; i++)
+                            {
+                                if (!preferenceManager.AddPreferenceArea(preferenceID, CB_PreferedAreas.Items[i].ToString()))
+                                {
+                                    flag = false;
+                                    DisplayNotifyBox("Could not edit", "An error occured while trying to add area " + CB_PreferedAreas.Items[i].ToString(), 4);
+                                }
+                            }
+                            if (flag)
+                            {
+                                DisplayNotifyBox("Preference Added", "Preference has been added", 3);
+                                edited = true;
+                            }
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("Could not edit", "An error occured while trying to add a new preference. Please try again later", 3);
+                        }
+
+                    }
+                    else
+                    {
+                        DisplayNotifyBox("Could not edit", "The preferences as outlined already exists for this client", 4);
+                    }
+
+                    SetLoadingState(false);
+                    if (edited)
+                        CloseForm();
+
+                }).Start();
+            }
         }
     }
 }

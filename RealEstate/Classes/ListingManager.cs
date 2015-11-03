@@ -233,7 +233,7 @@ namespace RealEstate.Classes
         {
             int count = -1;
             DatabaseManager dbManager = new DatabaseManager();
-            var addressess = (dbManager.ReturnQuery("SELECT * FROM Address WHERE (Adress_ID = " + addressID + ")"));
+            var addressess = (dbManager.ReturnQuery("SELECT * FROM Address WHERE (Address_ID = " + addressID + ")"));
             foreach (var address in addressess)
             {
                 count++;
@@ -244,7 +244,7 @@ namespace RealEstate.Classes
         {
             int count = -1;
             DatabaseManager dbManager = new DatabaseManager();
-            var complexes = (dbManager.ReturnQuery("SELECT * FROM Complex WHERE (Complex_ID = '" + complexID + ")"));
+            var complexes = (dbManager.ReturnQuery("SELECT * FROM Complex WHERE (Complex_ID = " + complexID + ")"));
             foreach (var complex in complexes)
             {
                 count++;
@@ -274,14 +274,15 @@ namespace RealEstate.Classes
             {
                 addID = Convert.ToInt32(i[0]);
             }
+            dbManager.NonReturnQuery("DELETE FROM Image WHERE ( Image.Property_ID = " + propID + ");");
             if (countPropertiesInComplex(compID) == 0 && countPropertiesWithAddress(addID) == 0)
-                return (dbManager.NonReturnQuery("DELETE FROM Image, Complex, Address, Property, Listing USING Image, Complex, Address, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
+                return (dbManager.NonReturnQuery("DELETE FROM Complex, Address, Property, Listing USING Complex, Address, Property, Listing WHERE ( Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
             else if (countPropertiesInComplex(compID) == 0 && countPropertiesWithAddress(addID) != 0)
-                return (dbManager.NonReturnQuery("DELETE FROM Image, Complex, Property, Listing USING Image, Complex, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND  Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Listing.List_ID =" + listingID + ");"));
+                return (dbManager.NonReturnQuery("DELETE FROM Complex, Property, Listing USING Complex, Property, Listing WHERE (Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Listing.List_ID =" + listingID + ");"));
             else if (countPropertiesInComplex(compID) != 0 && countPropertiesWithAddress(addID) == 0)
-                return (dbManager.NonReturnQuery("DELETE FROM Image, Address, Property, Listing USING Image, Address, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND  Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
+                return (dbManager.NonReturnQuery("DELETE FROM Address, Property, Listing USING Address, Property, Listing WHERE ( Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
             else
-                return (dbManager.NonReturnQuery("DELETE FROM Image, Complex, Address, Property, Listing USING Image, Complex, Address, Property, Listing WHERE ( Image.Property_ID = Property.Property_ID AND  Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
+                return (dbManager.NonReturnQuery("DELETE FROM Complex, Address, Property, Listing USING Complex, Address, Property, Listing WHERE ( Complex.Complex_ID = Property.Complex_ID AND Property.Property_ID = Listing.Property_ID AND Property.Address_ID = Address.Address_ID AND Listing.List_ID =" + listingID + ");"));
         }
 
     }

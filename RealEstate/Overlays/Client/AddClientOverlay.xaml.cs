@@ -31,7 +31,36 @@ namespace RealEstate.Overlays.Client
         {
             if (PB_ConfirmPassword.Password.ToString() == PB_Password.Password.ToString())
             {
-                AddClient();
+                Classes.Validation valid = new Classes.Validation();
+                if (valid.TextHasNumber(GetPassword()) && valid.TextHasSpecialChars(GetPassword()) && valid.TextIsLongerThan(GetPassword(), 8) && valid.TextIsShorterThan(GetPassword(), 32) && valid.TextContainsUpperCase(GetPassword()))
+                {
+                    if (valid.TextIsShorterThan(GetName(), 32) && valid.TextIsShorterThan(GetSurname(), 32) && valid.TextIsShorterThan(GetPhone(), 12))
+                    {
+                        if (valid.IsTextNumeric(GetPhone()))
+                        {
+                            if (valid.TextisEmail(GetEmail()) && valid.TextIsShorterThan(GetEmail(), 32))
+                            {
+                                AddClient();
+                            }
+                            else
+                            {
+                                DisplayNotifyBox("ERROR", "Please use a valid email address with length shorter than 32 characters", 10);
+                            } 
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a valid cellphone number with local 099 999 999 format", 10);
+                        }
+                    }
+                    else
+                    {
+                        DisplayNotifyBox("ERROR", "Please ensure all fields have lengths shorter than 32 characters", 10);
+                    } 
+                }
+                else
+                {
+                    DisplayNotifyBox("ERROR", "Your password must contain at least one of each of the following: a special character, a number and an uppercase letter. It must also have a length of between 8 and 32 characters.", 10);
+                }  
             }
             else
             {

@@ -154,22 +154,31 @@ namespace RealEstate.Overlays.Location
                         SetLoadingState(true);
                         Classes.LocationManager locationManager = new Classes.LocationManager();
 
-                        if (locationManager.CanAddCity(GetCityName(), GetProvinceName()))
+                        Classes.Validation valid = new Classes.Validation();
+                        if (valid.TextIsShorterThan(GetCityName(), 32))
                         {
-                            if (locationManager.AddCity(GetCityName(), GetProvinceName()))
+                            if (locationManager.CanAddCity(GetCityName(), GetProvinceName()))
                             {
-                                DisplayNotifyBox( GetCityName() + " Added", GetCityName() + " was added in " + GetProvinceName(), 3);
-                                ClearForm();
+                                if (locationManager.AddCity(GetCityName(), GetProvinceName()))
+                                {
+                                    DisplayNotifyBox(GetCityName() + " Added", GetCityName() + " was added in " + GetProvinceName(), 3);
+                                    ClearForm();
+                                }
+                                else
+                                {
+                                    DisplayNotifyBox("Could not Add City", GetCityName() + " could not be added. Please try again", 3);
+                                }
                             }
                             else
                             {
-                                DisplayNotifyBox("Could not Add City", GetCityName() + " could not be added. Please try again", 3);
+                                DisplayNotifyBox("Cannot Add City", GetCityName() + " already exists in " + GetProvinceName(), 3);
                             }
                         }
                         else
                         {
-                            DisplayNotifyBox("Cannot Add City", GetCityName() + " already exists in " + GetProvinceName(), 3);
+                            DisplayNotifyBox("ERROR", "City name must be shorter than 32 character", 5);
                         }
+                        
 
                         SetLoadingState(false);
                     }).Start();

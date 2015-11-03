@@ -215,23 +215,32 @@ namespace RealEstate.Overlays.Location
                 SetLoadingState(true);
 
                 Classes.LocationManager locationManager = new Classes.LocationManager();
+                Classes.Validation valid = new Classes.Validation();
 
-                if( locationManager.CanAddArea(newName,newCity,newProvince) )
+                if (valid.TextIsShorterThan(newName, 32))
                 {
-                    if (locationManager.EditArea(oldName, newName, oldCity, newCity, oldProvince, newProvince))
+                    if (locationManager.CanAddArea(newName, newCity, newProvince))
                     {
-                        DisplayNotifyBox("Edited", oldName + "," + oldCity + "," + oldProvince + " changed to " + newName + "," + newCity + "," + newProvince,3);
-                        edited = true;
+                        if (locationManager.EditArea(oldName, newName, oldCity, newCity, oldProvince, newProvince))
+                        {
+                            DisplayNotifyBox("Edited", oldName + "," + oldCity + "," + oldProvince + " changed to " + newName + "," + newCity + "," + newProvince, 3);
+                            edited = true;
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("Could not edit", "En error occured. Please try again later", 3);
+                        }
                     }
                     else
                     {
-                        DisplayNotifyBox("Could not edit", "En error occured. Please try again later", 3);
+                        DisplayNotifyBox("Could not edit", "Cannot change " + oldName + "," + oldCity + "," + oldProvince + " to " + newName + "," + newCity + "," + newProvince + " because " + newName + "," + newCity + "," + newProvince + " already exists", 4);
                     }
                 }
                 else
                 {
-                    DisplayNotifyBox("Could not edit", "Cannot change " + oldName + "," + oldCity + "," + oldProvince + " to " + newName + "," + newCity + "," + newProvince + " because " + newName + "," + newCity + "," + newProvince + " already exists", 4);
+                    DisplayNotifyBox("ERROR", "Area name must be shorter than 32 character", 5);
                 }
+                
 
                 SetLoadingState(false);
 

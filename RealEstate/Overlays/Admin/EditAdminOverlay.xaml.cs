@@ -54,16 +54,30 @@ namespace RealEstate.Overlays.Admin
         {
             if( CanEdit() )
             {
+                Classes.Validation valid = new Classes.Validation();
                 if( (bool)CB_ChangeUsername.IsChecked )
                 {
-                    EditUsername();
+                    if (valid.TextIsShorterThan(GetUsername(), 32))
+                    {
+                        EditUsername();
+                    }
+                    else
+                    {
+                        DisplayNotifybox("ERROR", "Your password must contain at least one of each of the following: a special character, a number and an uppercase letter. It must also have a length of between 8 and 32 characters.");
+                    }         
                 }
                 
                 if( (bool)CB_ChangePassword.IsChecked )
                 {
-                    EditPassword();
+                    if (valid.TextHasNumber(PB_Password.Password.ToString()) && valid.TextHasSpecialChars(PB_Password.Password.ToString()) && valid.TextIsLongerThan(PB_Password.Password.ToString(), 8) && valid.TextIsShorterThan(PB_Password.Password.ToString(), 32) && valid.TextContainsUpperCase(PB_Password.Password.ToString()))
+                    {
+                        EditPassword();
+                    }
+                    else
+                    {
+                        DisplayNotifybox("ERROR", "Your password must contain at least one of each of the following: a special character, a number and an uppercase letter. It must also have a length of between 8 and 32 characters.");
+                    }
                 }
-
                 this.Close();
             }
             else
@@ -101,7 +115,7 @@ namespace RealEstate.Overlays.Admin
         {
             this.Dispatcher.Invoke(() =>
             {
-                NotifyBox.Show(null, title, message, new TimeSpan(0, 0, 2), false);
+                NotifyBox.Show(null, title, message, new TimeSpan(0, 0, 5), false);
             });
         }
 

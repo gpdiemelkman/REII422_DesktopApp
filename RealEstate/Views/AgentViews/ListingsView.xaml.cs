@@ -35,7 +35,7 @@ namespace RealEstate.Views.AgentViews
             (this.Tag as AgentWindow).AV_Listings.Visibility = System.Windows.Visibility.Hidden;
             (this.Tag as AgentWindow).BT_ManageCustomers.Visibility = System.Windows.Visibility.Visible;
             (this.Tag as AgentWindow).BT_Listings.Visibility = System.Windows.Visibility.Visible;
-            (this.Tag as AgentWindow).BT_Manage.Visibility = System.Windows.Visibility.Visible;
+            (this.Tag as AgentWindow).BT_ManageOffers.Visibility = System.Windows.Visibility.Visible;
             (this.Tag as AgentWindow).BT_Properties.Visibility = System.Windows.Visibility.Visible;
         }
         private string GetCurrentAgent()
@@ -155,7 +155,7 @@ namespace RealEstate.Views.AgentViews
                 foreach (var list in listingInfo)
                 {
                     DatabaseManager dbManager2 = new DatabaseManager();
-                    var propertyInfo = dbManager2.ReturnQuery("SELECT Client_ID, Property_Unit_No, Address_ID, Complex_ID FROM Property WHERE Property_ID = " + Convert.ToInt32(list[1]) + " ORDER BY Property_ID;");
+                    var propertyInfo = dbManager2.ReturnQuery("SELECT Client_ID, Property_Unit_No, Address_ID, Complex_ID, Property_ID FROM Property WHERE Property_ID = " + Convert.ToInt32(list[1]) + " ORDER BY Property_ID;");
                     foreach (var property in propertyInfo)
                     {
                         DatabaseManager dbManager3 = new DatabaseManager();
@@ -165,7 +165,7 @@ namespace RealEstate.Views.AgentViews
                             DatabaseManager dbManager4 = new DatabaseManager();
                             if (Convert.ToInt32(property[3]) != 0 && Convert.ToInt32(property[3]) != -1)
                             {
-                                var complexInfo = dbManager4.ReturnQuery("SELECT Complex_Name FROM Complex WHERE Address_ID = " + Convert.ToInt32(address[0]) + " ORDER BY Complex_ID;");
+                                var complexInfo = dbManager4.ReturnQuery("SELECT Complex_Name, Complex_ID FROM Complex WHERE Address_ID = " + Convert.ToInt32(address[0]) + " ORDER BY Complex_ID;");
                                 foreach (var complex in complexInfo)
                                 {
                                     DatabaseManager dbManager5 = new DatabaseManager();

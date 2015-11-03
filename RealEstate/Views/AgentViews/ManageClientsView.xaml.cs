@@ -155,7 +155,7 @@ namespace RealEstate.Views.AgentViews
             (this.Tag as AgentWindow).AV_MangeClients.Visibility = System.Windows.Visibility.Hidden;
             (this.Tag as AgentWindow).BT_ManageCustomers.Visibility = System.Windows.Visibility.Visible;
             (this.Tag as AgentWindow).BT_Listings.Visibility = System.Windows.Visibility.Visible;
-            (this.Tag as AgentWindow).BT_Manage.Visibility = System.Windows.Visibility.Visible;
+            (this.Tag as AgentWindow).BT_ManageOffers.Visibility = System.Windows.Visibility.Visible;
             (this.Tag as AgentWindow).BT_Properties.Visibility = System.Windows.Visibility.Visible;
         }
 

@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="RealEstate.Views.AgentViews.ListingsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:extra="http://schemas.extra.com/ui"
+        xmlns:extra="http://schemas.extra.com/ui"
         xmlns:metro="http://schemas.codeplex.com/elysium"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"              
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -24,6 +24,7 @@
        
         <DataGrid x:Name="DG_Listings" extra:UIElementAttached.IsBubblingMouseWheelEvents="True" IsReadOnly="True" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" SelectionChanged="DG_Listings_SelectionChanged">
             <DataGrid.Columns>
+                <extra:DataGridTextColumn Header="Listing ID" Binding="{Binding ID}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Client" Binding="{Binding Client}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Address" Binding="{Binding Address}" AutomationProperties.Name="Text" />
                 <extra:DataGridTextColumn Header="Complex" Binding="{Binding Complex}" AutomationProperties.Name="Text" />

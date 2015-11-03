@@ -59,20 +59,30 @@ namespace RealEstate.Overlays.Location
 
                             if( locationManager.CanAddProvince(GetNewProvinceName()))
                             {
-                                if( locationManager.ChangeProvinceName(provinceToEdit, GetNewProvinceName() ))
+                                Classes.Validation valid = new Classes.Validation();
+
+                                if (valid.TextIsShorterThan(GetNewProvinceName(), 32))
                                 {
-                                    DisplayNotifyBox(provinceToEdit + " Edited", provinceToEdit + " was changed to " + GetNewProvinceName(),2);
-                                    isEdited = true;
+                                    if (locationManager.ChangeProvinceName(provinceToEdit, GetNewProvinceName()))
+                                    {
+                                        DisplayNotifyBox(provinceToEdit + " Edited", provinceToEdit + " was changed to " + GetNewProvinceName(), 2);
+                                        isEdited = true;
+                                    }
+                                    else
+                                    {
+                                        DisplayNotifyBox("Could not edit " + provinceToEdit, provinceToEdit + " was not changed. Please try again", 3);
+                                    }
+
+                                    if (isEdited == true)
+                                    {
+                                        CloseForm();
+                                    }
                                 }
                                 else
                                 {
-                                    DisplayNotifyBox("Could not edit " + provinceToEdit, provinceToEdit + " was not changed. Please try again",3);
+                                    DisplayNotifyBox("ERROR", "Province name must be shorter than 32 character", 5);
                                 }
-
-                                if (isEdited == true)
-                                {
-                                    CloseForm();
-                                }
+                                
                             }
                             else
                             {

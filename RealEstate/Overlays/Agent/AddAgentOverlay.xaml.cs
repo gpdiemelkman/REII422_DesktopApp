@@ -31,7 +31,22 @@ namespace RealEstate.Overlays.Agent
         {
             if (PB_ConfirmPassword.Password.ToString() == PB_Password.Password.ToString())
             {
-                AddAgent();
+                Classes.Validation valid = new Classes.Validation();
+                if (valid.TextHasNumber(PB_Password.Password.ToString()) && valid.TextHasSpecialChars(PB_Password.Password.ToString()) && valid.TextIsLongerThan(PB_Password.Password.ToString(), 8) && valid.TextIsShorterThan(PB_Password.Password.ToString(), 32) && valid.TextContainsUpperCase(PB_Password.Password.ToString()))
+                {
+                    if (valid.TextisEmail(GetEmail()) && valid.TextIsShorterThan(GetEmail(), 32))
+                    {
+                        AddAgent();
+                    }
+                    else
+                    {
+                        DisplayNotifyBox("ERROR", "Please use a valid email address with length shorter than 32 characters", 10);
+                    } 
+                }
+                else
+                {
+                    DisplayNotifyBox("ERROR", "Your password must contain at least one of each of the following: a special character, a number and an uppercase letter. It must also have a length of between 8 and 32 characters.", 10);
+                }       
             }
             else
             {
@@ -170,15 +185,30 @@ namespace RealEstate.Overlays.Agent
                 {
                     SetLoadingState(true);
 
-                    if (agentManager.AddAgent(GetName(), GetSurname(), GetPhone(), GetEmail(), GetPassword()))
+                    Classes.Validation valid = new Classes.Validation();
+                    if (valid.TextIsShorterThan(GetName(), 32) && valid.TextIsShorterThan(GetSurname(), 32) && valid.TextIsShorterThan(GetPhone(), 12))
                     {
-                        DisplayNotifyBox("Agent Added", GetName() + " has been successfully added", 2);
+                        if (valid.IsTextNumeric(GetPhone()))
+                        {
+                            if (agentManager.AddAgent(GetName(), GetSurname(), GetPhone(), GetEmail(), GetPassword()))
+                            {
+                                DisplayNotifyBox("Agent Added", GetName() + " has been successfully added", 5);
+
+                            }
+                            else
+                            {
+                                DisplayNotifyBox("ERROR", "Could not add " + GetName(), 2);
+                            }
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a valid cellphone number with local 099 999 999 format", 10);
+                        }
                     }
                     else
                     {
-                        DisplayNotifyBox("ERROR", "Could not add " + GetName(), 2);
-                    }
-
+                        DisplayNotifyBox("ERROR", "Please ensure all fields have lengths shorter than 32 characters", 10);
+                    } 
                     ClearForm();
                 }
                 else

@@ -95,16 +95,25 @@ namespace RealEstate.Overlays.Agent
             if (editName || editSurname || editPhone || editEmail || editPassword)
             {
                 edited = true;
+                Classes.Validation valid = new Classes.Validation();
+
                 if (editName)
                 {
                     if (GetNewName() != "")
                     {
-                        EditName(agentEmail, GetNewName());
+                        if (valid.TextIsShorterThan(GetNewName(), 32))
+                        {
+                            EditName(agentEmail, GetNewName());       
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a name shorter than 32 characters", 10);
+                        }                        
                     }
                     else
                     {
                         edited = false;
-                        DisplayNotifyBox("ERROR", "New name cannot be empty", 3);
+                        DisplayNotifyBox("ERROR", "New name cannot be empty", 5);
                     }
                 }
 
@@ -112,12 +121,19 @@ namespace RealEstate.Overlays.Agent
                 {
                     if (GetNewSurname() != "")
                     {
-                        EditSurname(agentEmail, GetNewSurname());
+                        if (valid.TextIsShorterThan(GetNewSurname(), 32))
+                        {
+                            EditSurname(agentEmail, GetNewSurname());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a surname shorter than 32 characters", 10);
+                        }    
                     }
                     else
                     {
                         edited = false;
-                        DisplayNotifyBox("ERROR", "New surname cannot be empty", 3);
+                        DisplayNotifyBox("ERROR", "New surname cannot be empty", 5);
                     }
                 }
 
@@ -125,12 +141,19 @@ namespace RealEstate.Overlays.Agent
                 {
                     if (GetNewPhone() != "")
                     {
-                        EditPhone(agentEmail, GetNewPhone());
+                        if (valid.IsTextNumeric(GetNewPhone()) && valid.TextIsShorterThan(GetNewPhone(), 12))
+                        {
+                            EditPhone(agentEmail, GetNewPhone());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a valid cellphone number with local 099 999 9999 format", 10);
+                        }
                     }
                     else
                     {
                         edited = false;
-                        DisplayNotifyBox("ERROR", "New phone number cannot be empty", 3);
+                        DisplayNotifyBox("ERROR", "New phone number cannot be empty", 5);
                     }
                 }
 
@@ -138,12 +161,19 @@ namespace RealEstate.Overlays.Agent
                 {
                     if (GetNewEmail() != "")
                     {
-                        EditEmail(agentEmail, GetNewEmail());
+                        if (valid.TextisEmail(GetNewEmail()) && valid.TextIsShorterThan(GetNewEmail(), 32))
+                        {
+                            EditEmail(agentEmail, GetNewEmail());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Please use a valid email address with length shorter than 32 characters", 10);
+                        } 
                     }
                     else
                     {
                         edited = false;
-                        DisplayNotifyBox("ERROR", "New email cannot be empty", 3);
+                        DisplayNotifyBox("ERROR", "New email cannot be empty", 5);
                     }
                 }
 
@@ -151,12 +181,19 @@ namespace RealEstate.Overlays.Agent
                 {
                     if (GetNewPassword() != "" && CanEditPassword())
                     {
-                        EditPassword(agentEmail, GetNewPassword());
+                        if (valid.TextHasNumber(GetNewPassword()) && valid.TextHasSpecialChars(GetNewPassword()) && valid.TextIsLongerThan(GetNewPassword(), 8) && valid.TextIsShorterThan(GetNewPassword(), 32) && valid.TextContainsUpperCase(GetNewPassword()))
+                        {
+                            EditPassword(agentEmail, GetNewPassword());
+                        }
+                        else
+                        {
+                            DisplayNotifyBox("ERROR", "Your password must contain at least one of each of the following: a special character, a number and an uppercase letter. It must also have a length of between 8 and 32 characters.", 10);
+                        }  
                     }
                     else
                     {
                         edited = false;
-                        DisplayNotifyBox("ERROR", "New password cannot be empty", 3);
+                        DisplayNotifyBox("ERROR", "New password cannot be empty", 5);
                     }
                 }
 
@@ -167,7 +204,7 @@ namespace RealEstate.Overlays.Agent
             }
             else
             {
-                DisplayNotifyBox("No change selected", "Please select a property to change", 3);
+                DisplayNotifyBox("No change selected", "Please select a property to change", 5);
             }
         }
 
@@ -309,12 +346,12 @@ namespace RealEstate.Overlays.Agent
                 }
                 else
                 {
-                    DisplayNotifyBox("ERROR", "Password do not match",3);
+                    DisplayNotifyBox("ERROR", "Password do not match",5);
                 }
             }
             else if (((bool)CB_ChangePassword.IsChecked) && (PB_NewPassword.Password.ToString() == ""))
             {
-                DisplayNotifyBox("ERROR", "Password cannot be empty",3);
+                DisplayNotifyBox("ERROR", "Password cannot be empty",5);
             }
 
             return canEditPassword;

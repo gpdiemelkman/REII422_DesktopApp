@@ -207,22 +207,29 @@ namespace RealEstate.Overlays.Location
                         Classes.LocationManager locationManager = new Classes.LocationManager();
 
                         SetLoadingState(true);
-
-                        if( locationManager.CanAddArea(GetAreaName(),GetCityName(),GetProvinceName()) )
+                        Classes.Validation valid = new Classes.Validation();
+                        if (valid.TextIsShorterThan(GetAreaName(), 32))
                         {
-                            if (locationManager.AddArea(GetAreaName(), GetCityName(), GetProvinceName()))
+                            if (locationManager.CanAddArea(GetAreaName(), GetCityName(), GetProvinceName()))
                             {
-                                DisplayNotifyBox("Area Added", GetAreaName() + "," + GetCityName() + "," + GetProvinceName() + " was added", 3);
-                                ClearForm();
+                                if (locationManager.AddArea(GetAreaName(), GetCityName(), GetProvinceName()))
+                                {
+                                    DisplayNotifyBox("Area Added", GetAreaName() + "," + GetCityName() + "," + GetProvinceName() + " was added", 3);
+                                    ClearForm();
+                                }
+                                else
+                                {
+                                    DisplayNotifyBox("Could not add", "Area not added please try again", 3);
+                                }
                             }
                             else
                             {
-                                DisplayNotifyBox("Could not add", "Area not added please try again", 3);
+                                DisplayNotifyBox("Cannot Add", GetAreaName() + " already exists in " + GetCityName() + "," + GetProvinceName(), 3);
                             }
                         }
                         else
                         {
-                            DisplayNotifyBox("Cannot Add", GetAreaName() + " already exists in " + GetCityName() + "," + GetProvinceName(), 3);
+                            DisplayNotifyBox("ERROR", "Area name must be shorter than 32 character", 5);
                         }
 
                         SetLoadingState(false);

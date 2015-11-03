@@ -108,7 +108,7 @@ namespace RealEstate.Classes
         /// <returns>string array with rows and columns corresponding to query result</returns>
         public IEnumerable<string[]> ReturnQuery(string query)
         {
-
+            //Console.WriteLine("=============================SQL @ ReturnQuery: " + query);
             if (OpenDatabase())
             {
                 MySqlCommand command = connection.CreateCommand();
@@ -145,7 +145,7 @@ namespace RealEstate.Classes
         public bool NonReturnQuery(string query)
         {
             bool querySuccess = false;
-
+            //Console.WriteLine("=============================SQL @ NonReturnQuery: " + query);
             if (OpenDatabase())
             {
                 MySqlCommand command = new MySqlCommand(query, connection);

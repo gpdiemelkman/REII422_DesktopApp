@@ -46,15 +46,16 @@
                 <TextBlock Text="Client : " Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ComboBox x:Name="CB_Client" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="600" SelectionChanged="CB_Client_SelectionChanged"/>
 
-                <TextBlock Text="Address : " Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2" HorizontalAlignment="Left">
-                    <ComboBox x:Name="CB_Province" HorizontalAlignment="Left"  Width="200" SelectionChanged="CB_Province_SelectionChanged"/>
-                    <ComboBox x:Name="CB_City" HorizontalAlignment="Center" Width="200" SelectionChanged="CB_City_SelectionChanged"/>
-                    <ComboBox x:Name="CB_Area" HorizontalAlignment="Right" Width="200" SelectionChanged="CB_Area_SelectionChanged"/>
+                    <ComboBox x:Name="CB_Province" HorizontalAlignment="Left"  Width="200" ToolTip="Provinces" SelectionChanged="CB_Province_SelectionChanged"/>
+                    <ComboBox x:Name="CB_City" HorizontalAlignment="Center" Width="200" ToolTip="Cities" SelectionChanged="CB_City_SelectionChanged"/>
+                    <ComboBox x:Name="CB_Area" HorizontalAlignment="Right" Width="200" ToolTip="Areas, if are not available, contact admin" SelectionChanged="CB_Area_SelectionChanged"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Left" Grid.Column="1" VerticalAlignment="Center" >
+                    <TextBlock Text="Address : " Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <TextBlock  Text="Streetname " VerticalAlignment="Center"/>
                     <TextBox x:Name="TB_Streetname"  Width="150" VerticalAlignment="Center"/>
                     <TextBlock Text=" Streetno " VerticalAlignment="Center"/>
